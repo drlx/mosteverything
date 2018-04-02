@@ -1,0 +1,32 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+  }
+
+body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.category{
+width: 100%;
+}
+
+.animal {
+align: center;
+margin: 20px;
+padding: 10px;
+max-width: 30%;
+border-style: dashed;
+}
+
+img {
+height: 100px;
+width: relative;
+max-width: 90%;
+}
+
+.animalname {
+text-align: center;
+}
+
