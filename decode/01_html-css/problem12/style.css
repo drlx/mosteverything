@@ -1,8 +1,21 @@
 .container {
+display: flex;
+flex-direction: row;
+font-size: 20pt
+
 }
 
 .smol {
+    width: relative;
+    max-width: 90%;
+    height: 90%;
 }
 
 .col {
+    height: 300px;
+    max-width: 33%;
+    text-align: center;
+    outline-style: dashed;
+    margin: 20px;
+    padding: 20px;
 }
