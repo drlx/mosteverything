@@ -2,11 +2,19 @@ var assert = require('assert');
 
 // we need 5 test cases. 
 let inputs = [
-  
+'Lorem ipsumos dolor sit amet consectetur adipisicing elit. Magni quisquam',
+'Make this function return the input string wrapped to 40 characters per line. ',
+'This means youll have to insert a newline character after every 40 characters in the input string. ',
+'Debugger listening on ws://127.0.0.1:6646/f86f97d4-32eb-4ce5-9c62-73621fb94112',
+'Error: You do not have enough test cases'
 ]
 
 let outputs = [
-  
+'Lorem ipsumos dolor sit amet consectetur \nadipisicing elit. Magni quisquam',
+'Make this function return the input strin\ng wrapped to 40 characters per line. ',
+'This means youll have to insert a newline\ncharacter after every 40 characters in \nthe input string. ',
+'Debugger listening on ws://127.0.0.1:6646\n/f86f97d4-32eb-4ce5-9c62-73621fb94112',
+'Error: You do not have enough test cases'
 ]
 
 /*
@@ -31,7 +39,20 @@ Lorem ipsumos dolor sit amet consectetur
  even though there is a space before the a in adipisicing
 */
 function f(str) {
-    
+var split = str.split('');
+var newarr = [];
+for (i=0;i<split.length;i++){
+    newarr.push(split[i]);
+    if (i > 0 && i%40 == 0){
+        if (split[i+1] == ' '){
+        split[i+1] = ''
+        }
+   newarr.push('\n');
+ }
+} 
+newarr = newarr.join('');
+console.log(newarr);
+return newarr;
 }
 
 function runTest(i) {
