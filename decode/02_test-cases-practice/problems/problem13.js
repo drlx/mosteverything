@@ -2,11 +2,19 @@ var assert = require('assert');
 
 // we need 5 test cases. 
 let inputs = [
-  
+  'RADAR',
+  'RACECAR',
+  'NOPE',
+  'NOTTHIS',
+  'ABCCBA'
 ]
 
 let outputs = [
-  
+  true,
+  true,
+  false,
+  false,
+  true
 ]
 
 /*
@@ -16,7 +24,14 @@ RADAR -> Yes
 JAVASCRIPT -> No
 */
 function f(str) {
+    var split = str.split('');
+    var reverse = str.split('');
+    reverse = reverse.reverse();
+    splitm = split.join('');
+    reversem = reverse.join('');
     
+    return splitm === reversem;
+
 }
 
 function runTest(i) {
