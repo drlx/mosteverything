@@ -1,5 +1,12 @@
 
 function callNoException(f, arg) {
+    try {
+      return f(arg);
+    }
+    catch(err) {
+       return null;
+    }
+
     // if f(arg) throws an exception, return null
     // otherwise return what f(arg) returned
     // Example:
@@ -12,6 +19,14 @@ function callNoException(f, arg) {
 }
 
 function callNoNull(f, arg) {
+        if (f(arg) === null){
+            throw new Error('test');
+        }
+        else{
+        return f(arg);
+    }
+ 
+
     // if f(arg) returns null, throw an exception
     // otherwise return what f(arg) returned  
     // Example: 
@@ -26,6 +41,17 @@ function callNoNull(f, arg) {
 }
 
 function exceptionalize(f) {
+   function g(arg){
+       if (f(arg)===null){
+           throw new Error('test');
+       }
+       else {
+           return f(arg);
+         }
+    }
+    return g;
+}
+
     // returns a new function
     // this function takes 1 input, called arg
     // if f(arg) is null, this new function throws an exception
@@ -40,9 +66,18 @@ function exceptionalize(f) {
     // g(0) throws an exception
     // g(12) returns 12
 
-}
 
 function nullify(f) {
+       
+      return function g(arg){
+         try{
+             return f(arg);
+         }
+         catch(err){
+             return null;
+         }
+      }
+}
     // returns a new function
     // this function takes 1 input, called arg
     // if f(arg) throws an exception, this new function returns null
@@ -56,9 +91,15 @@ function nullify(f) {
     //  g(0) returns null
     //  g(12) throws an exception
     
-}
+
 
 function map(lst, f) {
+      var newlst = [];
+      for (i=0;i<lst.length;i++){
+      newlst.push(f(lst[i]));
+      }
+return newlst;
+}
     // lst is an array and f is a function
     // map returns an array with the same number of elements as lst
     // if lst = [a1, a2, a3, a4, a5] then map(lst, f) returns [f(a1), f(a2), f(a3), f(a4), f(a5)]
@@ -69,9 +110,17 @@ function map(lst, f) {
     //
     // function toUpperCase(str) { return str.toUpperCase(); }
     // map(["bob", "susie"], toUpperCase) returns ["BOB", "SUSIE"]
-}
+
 
 function filter(lst, f) {
+    var newlst = [];
+    for (i=0;i<lst.length;i++){
+       if (f(lst[i])){
+          newlst.push(lst[i]);
+       }
+    }
+return newlst;
+}
     // lst is an array and f is a function
     // f takes one argument and returns a boolean (true or false)
     // filter(lst, f) returns a list with all the elements of lst that does not satisfy f removed
@@ -83,9 +132,18 @@ function filter(lst, f) {
     // Example:
     // function isEven(x) {return x % 2 == 0;}
     // filter([1, 2, 3, 4, 5], isEven) returns [2,4];   
-}
+
 
 function every(lst, f) {
+    var target = lst.length;
+    var actual = 0
+    for (i=0;i<lst.length;i++){
+    if (f(lst[i])){
+        actual++;
+    }
+    }
+    return target === actual;
+}
     // lst is an array and f is a function
     // f takes 1 arguments and returns a boolean
     // filter(lst, f) returns a true if f returns true for every element of lst
@@ -93,7 +151,7 @@ function every(lst, f) {
     // Example
     // every([2,4,12], x => x % 2 == 0) returns true
     // every([2,3,12], x => x % 2 == 0) returns false    
-}
+
 
 
 module.exports = {
