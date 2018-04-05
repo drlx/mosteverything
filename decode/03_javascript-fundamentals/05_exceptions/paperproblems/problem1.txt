@@ -13,3 +13,6 @@ function g() {
 }
 
 g();
+
+
+Output ==> console.log(500);

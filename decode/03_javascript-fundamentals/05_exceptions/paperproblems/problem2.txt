@@ -23,3 +23,6 @@ function g() {
 }
 
 g();
+
+console.log(500)
+console.log(some error)
