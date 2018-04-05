@@ -2,10 +2,9 @@ Someone has given you a function called filter
 You don't know what it does, but there are clues at the bottom of this file
 Use these clues to describe what filter is.
 Specifically:
- - How many parameters does it have
- - What are the types of the parameters
- - What does it do?
-
+ - How many parameters does it have? 2
+ - What are the types of the parameters? Array, function
+ - What does it do? Returns an array containing either only the even or the odd numbers from the input array. 
 
 
 var evenNumbers = [2, 4, 6, 8, 10];
