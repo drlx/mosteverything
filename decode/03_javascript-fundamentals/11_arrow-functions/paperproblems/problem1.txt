@@ -14,6 +14,17 @@ e) x => console.log(z); return x * z
 
 f) (x) => x * 2
 
-e) () => console.log("hello")
+g) () => console.log("hello")
 
 When you're done, check all your answers in the developer console.
+
+—————————
+
+a) no error; return x+1 (input/output number).
+b) syntax error parameters must be in parenthesis. 
+c) no error but the function returns undefined.
+d) no error; input numbers output number.
+e) Syntax error; need curly brackets. (z must also be a global variable)
+f) no error; input/output number
+g) No error; no input, console.log(‘hello’) return undefined 
+
