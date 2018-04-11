@@ -28,6 +28,8 @@ let gameStart = () => {
 }
 
 let gameTimer = () => {
+    document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
+    document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
     document.getElementById('prepare').style.display = 'block';
     document.getElementById('playerone').style.display = 'block';
     document.getElementById('playertwo').style.display = 'block';
@@ -47,10 +49,7 @@ let gameTimer = () => {
 
 let playerOneCondition = () => {
     console.log('playeroneclick');
-    if (playerOneScore >= 3){
-       document.body.innerHTML = "<h1>PLAYER ONE HAS 3 POINTS AND WINS!</h1>"; 
-       document.body.appendChild(restartbutton);
-    }
+
     if (!playerTwoWon && !hasWon && gameStarted){
         playerOneScore++;
         hasWon = true;
@@ -64,6 +63,10 @@ let playerOneCondition = () => {
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
         document.getElementById('poke').style.display = 'none';
+        if (playerOneScore > 2){
+            document.body.innerHTML = "<h1>PLAYER ONE HAS 3 POINTS AND WINS!</h1>"; 
+            document.body.appendChild(restartbutton);
+         }
      }
     if (!gameStarted && !earlyFinish){
         alert('One used Pokeball too early! Player two wins!');
@@ -73,21 +76,22 @@ let playerOneCondition = () => {
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
         nextround.style.visibility = 'visible';
+        if (playerTwoScore > 2){
+            document.body.innerHTML = "<h1>PLAYER TWO HAS 3 POINTS AND WINS!</h1>"; 
+            document.body.appendChild(restartbutton);
+         }
     }   
 }
 
 let playerTwoCondition = () => {
     console.log('playertwoclick');
-    if (playerOneScore >= 3){
-        document.body.innerHTML = "<h1>PLAYER TWO HAS 3 POINTS AND WINS!</h1>"; 
-        document.body.appendChild(restartbutton);
-     }
+
     if (!playerOneWon && !hasWon && gameStarted){
         playerTwoScore++;
         hasWon = true;
         playerTwoWon = true;
         nextround.style.visibility = 'visible';
-        document.getElementById('win').innerText = 'PLAYER TWO HAS CAUGHT PIKACHU!' + playerTwoScore
+        document.getElementById('win').innerText = 'PLAYER TWO HAS CAUGHT PIKACHU!'
         //document.body.innerHTML = "<h1>PLAYER TWO CAUGHT PIKACHU</h1>";
         audio.pause();
         endmusic.play();
@@ -95,6 +99,10 @@ let playerTwoCondition = () => {
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
         document.getElementById('poke').style.display = 'none';
+        if (playerTwoScore > 2){
+            document.body.innerHTML = "<h1>PLAYER TWO HAS 3 POINTS AND WINS!</h1>"; 
+            document.body.appendChild(restartbutton);
+         }
      }
     if (!gameStarted && !earlyFinish){
         playerOneScore++;
@@ -104,6 +112,10 @@ let playerTwoCondition = () => {
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
         nextround.style.visibility = 'visible';
+        if (playerOneScore > 2){
+            document.body.innerHTML = "<h1>PLAYER ONE HAS 3 POINTS AND WINS!</h1>"; 
+            document.body.appendChild(restartbutton);
+         }
     } 
 }
 
@@ -120,6 +132,14 @@ let nextroundact = (event) => {
     document.getElementById('prepare').style.display = 'none';
     document.getElementById('playerone').style.display = 'none';
     document.getElementById('playertwo').style.display = 'none';
+    document.getElementById('playeronescore0').style.display = 'none';
+    document.getElementById('playertwoscore0').style.display = 'none';
+    document.getElementById('playeronescore1').style.display = 'none';
+    document.getElementById('playertwoscore1').style.display = 'none';
+    document.getElementById('playeronescore2').style.display = 'none';
+    document.getElementById('playertwoscore2').style.display = 'none';
+    document.getElementById('playeronescore3').style.display = 'none';
+    document.getElementById('playertwoscore3').style.display = 'none';
     hasWon = false;
     gameStarted = false;
     playerOneWon = false;
