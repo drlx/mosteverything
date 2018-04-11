@@ -54,6 +54,7 @@ var removeAll = () => {
 var hasWon = false;
 
 var restart = () => {
+    event.stopPropagation();
     clickCount = 0;
     hasWon = false;
     restartbutton.remove();
@@ -62,6 +63,7 @@ var restart = () => {
 }
 
 var win = (btn, event) => {
+    console.log(btn);
     event.stopPropagation();
     console.log(event);
     clickCount++;
