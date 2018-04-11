@@ -1,0 +1,67 @@
+html,
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-image: url("background.png");
+    background-size: cover;
+    
+}
+button {
+    border: 0; 
+    background: transparent;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10%;
+    width: 50%;
+}
+
+.zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+
+h1 {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: white; 
+}
+
+#prepare {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10%;
+    width: 50%;
+}
+
+#poke {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10%;
+    width: 50%;
+}
+
+
+#playerone {  
+   display: none;
+   position: absolute;
+   left: 10%;
+   bottom: 10px;
+}
+
+#playertwo {
+   display: none;
+   position: absolute;
+   right: 10%;
+   bottom: 10px;
+}
