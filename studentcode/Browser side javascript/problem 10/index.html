@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <title>Click Game</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 </head>
 
 <body>
-<h1 id='win'></h1>
-<h1 id='end'></h1>
+<h3 id='win'></h3>
+<h3 id='end'></h3>
 <div class='zoom'><button id='start' class='imgbox'><img src="pokemon catch.png" width="512" height="307" alt="START FIGHT!" /></button></div>
 <img id='prepare' src="prepare.png" alt="PREPARE">
 <img id='poke' src="wildpikachu.png" alt="A WILD PIKACHU APPEARS">
@@ -23,6 +24,9 @@
 <img id='playeronescore1' class='playertwoscore' src="score 1.png" width="320" height="150" alt="Player One Score">
 <img id='playeronescore2' class='playertwoscore' src="score 2.png" width="320" height="150" alt="Player One Score">
 <img id='playeronescore3' class='playertwoscore' src="score 3.png" width="320" height="150" alt="Player One Score">
+<h3 id='instructions'>Race to catch pikachu! <br><br> Player 1 Press: Q <br> Player 2 Press: P</h3>
+<h3 id='playertwoearly'>Two used Pokeball too early! Player One gets the point!</h3>
+<h3 id='playeroneearly'>One used Pokeball too early! Player Two gets the point!</h3>
 </body>
 <script src='app.js'></script>
 

@@ -18,6 +18,16 @@ let earlyFinish = false;
 
 let startDelay = (Math.floor(Math.random()*6000)+2000);
 
+var timer;
+
+let timeout = () => {
+    timer = setTimeout(gameStart, startDelay);
+}
+
+let stoptime = () => {
+    clearTimeout(timeout);
+}
+
 let gameStart = () => {
     if (!earlyFinish){
     document.getElementById('prepare').style.display = 'none';
@@ -28,11 +38,13 @@ let gameStart = () => {
 }
 
 let gameTimer = () => {
+    document.getElementById('instructions').style.display = 'none';
     document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
     document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
     document.getElementById('prepare').style.display = 'block';
     document.getElementById('playerone').style.display = 'block';
     document.getElementById('playertwo').style.display = 'block';
+    //audio.currentTime = 0
     audio.play();
     theme.pause();
     document.body.onkeyup = function (e) {
@@ -44,7 +56,7 @@ let gameTimer = () => {
         }
     }
     startbutton.remove();
-    setTimeout(gameStart, startDelay);
+    timeout();
 } 
 
 let playerOneCondition = () => {
@@ -55,9 +67,20 @@ let playerOneCondition = () => {
         hasWon = true;
         playerOneWon = true;
         nextround.style.visibility = 'visible';
+        document.getElementById('playeronescore0').style.display = 'none';
+        document.getElementById('playertwoscore0').style.display = 'none';
+        document.getElementById('playeronescore1').style.display = 'none';
+        document.getElementById('playertwoscore1').style.display = 'none';
+        document.getElementById('playeronescore2').style.display = 'none';
+        document.getElementById('playertwoscore2').style.display = 'none';
+        document.getElementById('playeronescore3').style.display = 'none';
+        document.getElementById('playertwoscore3').style.display = 'none';
+        document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
+        document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
         document.getElementById('win').innerText = 'PLAYER ONE HAS CAUGHT PIKACHU!'
         //document.body.innerHTML("<h1>PLAYER ONE CAUGHT PIKACHU!</h1>"));
         audio.pause();
+        endmusic.currentTime = 0
         endmusic.play();
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
@@ -69,9 +92,19 @@ let playerOneCondition = () => {
          }
      }
     if (!gameStarted && !earlyFinish){
-        alert('One used Pokeball too early! Player two wins!');
+        document.getElementById('playeroneearly').style.display = 'block';
         playerTwoScore++;
         earlyFinish = true;
+        document.getElementById('playeronescore0').style.display = 'none';
+        document.getElementById('playertwoscore0').style.display = 'none';
+        document.getElementById('playeronescore1').style.display = 'none';
+        document.getElementById('playertwoscore1').style.display = 'none';
+        document.getElementById('playeronescore2').style.display = 'none';
+        document.getElementById('playertwoscore2').style.display = 'none';
+        document.getElementById('playeronescore3').style.display = 'none';
+        document.getElementById('playertwoscore3').style.display = 'none';
+        document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
+        document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
@@ -91,9 +124,20 @@ let playerTwoCondition = () => {
         hasWon = true;
         playerTwoWon = true;
         nextround.style.visibility = 'visible';
+        document.getElementById('playeronescore0').style.display = 'none';
+        document.getElementById('playertwoscore0').style.display = 'none';
+        document.getElementById('playeronescore1').style.display = 'none';
+        document.getElementById('playertwoscore1').style.display = 'none';
+        document.getElementById('playeronescore2').style.display = 'none';
+        document.getElementById('playertwoscore2').style.display = 'none';
+        document.getElementById('playeronescore3').style.display = 'none';
+        document.getElementById('playertwoscore3').style.display = 'none';
+        document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
+        document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
         document.getElementById('win').innerText = 'PLAYER TWO HAS CAUGHT PIKACHU!'
         //document.body.innerHTML = "<h1>PLAYER TWO CAUGHT PIKACHU</h1>";
         audio.pause();
+        endmusic.currentTime = 0
         endmusic.play();
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
@@ -106,8 +150,18 @@ let playerTwoCondition = () => {
      }
     if (!gameStarted && !earlyFinish){
         playerOneScore++;
-        alert('Two used Pokeball too early! Player one wins!');
+        document.getElementById('playertwoearly').style.display = 'block';
         earlyFinish = true;
+        document.getElementById('playeronescore0').style.display = 'none';
+        document.getElementById('playertwoscore0').style.display = 'none';
+        document.getElementById('playeronescore1').style.display = 'none';
+        document.getElementById('playertwoscore1').style.display = 'none';
+        document.getElementById('playeronescore2').style.display = 'none';
+        document.getElementById('playertwoscore2').style.display = 'none';
+        document.getElementById('playeronescore3').style.display = 'none';
+        document.getElementById('playertwoscore3').style.display = 'none';
+        document.getElementById('playeronescore'+playerOneScore).style.display = 'block';
+        document.getElementById('playertwoscore'+playerTwoScore).style.display = 'block';
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
@@ -128,7 +182,10 @@ let nextroundact = (event) => {
     console.log(playerOneScore);
     console.log(playerTwoScore);
     event.stopPropagation();
+    stoptime();
     nextround.style.visibility = 'hidden';
+    document.getElementById('playertwoearly').style.display = 'none';
+    document.getElementById('playeroneearly').style.display = 'none';
     document.getElementById('prepare').style.display = 'none';
     document.getElementById('playerone').style.display = 'none';
     document.getElementById('playertwo').style.display = 'none';
@@ -149,6 +206,7 @@ let nextroundact = (event) => {
     appear.pause();
     audio.pause();
     endmusic.pause();
+    //theme.currentTime = 0
     theme.play();
     document.body.onkeyup = null;
     document.getElementById('win').innerText = ''
