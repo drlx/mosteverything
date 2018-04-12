@@ -6,19 +6,38 @@ let appear = new Audio('appear2.mp3');
 let bang = () => {
     appear.play();
 }
-
 let playerOneScore = 0
 let playerTwoScore = 0
-
 let hasWon = false;
 let gameStarted = false;
 let playerOneWon = false;
 let playerTwoWon = false;
 let earlyFinish = false;
-
 let startDelay = (Math.floor(Math.random()*6000)+2000);
-
 var timer;
+
+
+// window.onresize = resizeImage
+
+// resizeImage()
+
+// function resizeImage() {
+   
+//     if ((window.innerWidth / window.innerHeight)>(800/480)){
+
+//         document.getElementById('wallPaper').style.width     = (window.innerWidth)+'px'
+//         document.getElementById('wallPaper').style.height     = (window.innerWidth*(480/800))+'px'
+
+        
+//     }else{
+
+//         document.getElementById('wallPaper').style.width     = (window.innerHeight*(800/480))+'px'
+//         document.getElementById('wallPaper').style.height     = (window.innerHeight-20)+'px'
+        
+//     }
+// }
+
+
 
 let timeout = () => {
     timer = setTimeout(gameStart, startDelay);
@@ -66,7 +85,8 @@ let playerOneCondition = () => {
         playerOneScore++;
         hasWon = true;
         playerOneWon = true;
-        nextround.style.visibility = 'visible';
+        nextround.style.display = 'block';
+        nextimage.style.display = 'block';
         document.getElementById('playeronescore0').style.display = 'none';
         document.getElementById('playertwoscore0').style.display = 'none';
         document.getElementById('playeronescore1').style.display = 'none';
@@ -108,7 +128,8 @@ let playerOneCondition = () => {
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
-        nextround.style.visibility = 'visible';
+        nextround.style.display = 'block';
+        nextimage.style.display = 'block';
         if (playerTwoScore > 2){
             document.body.innerHTML = "<h1>PLAYER TWO HAS 3 POINTS AND WINS!</h1>"; 
             document.body.appendChild(restartbutton);
@@ -123,7 +144,8 @@ let playerTwoCondition = () => {
         playerTwoScore++;
         hasWon = true;
         playerTwoWon = true;
-        nextround.style.visibility = 'visible';
+        nextround.style.display = 'block';
+        nextimage.style.display = 'block';
         document.getElementById('playeronescore0').style.display = 'none';
         document.getElementById('playertwoscore0').style.display = 'none';
         document.getElementById('playeronescore1').style.display = 'none';
@@ -165,7 +187,8 @@ let playerTwoCondition = () => {
         document.getElementById('prepare').style.display = 'none';
         document.getElementById('playerone').style.display = 'none';
         document.getElementById('playertwo').style.display = 'none';
-        nextround.style.visibility = 'visible';
+        nextround.style.display = 'block';
+        nextimage.style.display = 'block';
         if (playerOneScore > 2){
             document.body.innerHTML = "<h1>PLAYER ONE HAS 3 POINTS AND WINS!</h1>"; 
             document.body.appendChild(restartbutton);
@@ -183,7 +206,8 @@ let nextroundact = (event) => {
     console.log(playerTwoScore);
     event.stopPropagation();
     stoptime();
-    nextround.style.visibility = 'hidden';
+    nextround.style.display = 'none';
+    nextimage.style.display = 'none';
     document.getElementById('playertwoearly').style.display = 'none';
     document.getElementById('playeroneearly').style.display = 'none';
     document.getElementById('prepare').style.display = 'none';
@@ -218,9 +242,12 @@ startbutton.addEventListener('click', gameTimer);
 
 let x = document.createElement("IMG");
 x.setAttribute("src", "restart.png");
+x.id = 'playagain'
 
 let nextimage = document.createElement("IMG");
 nextimage.setAttribute("src", "nextround.png");
+nextimage.id = 'nextround'
+nextimage.style.display = 'none';
 
 
 let restartbutton = document.createElement('Button');
@@ -231,7 +258,7 @@ let nextround = document.createElement('Button');
 nextround.addEventListener('click', (e) => nextroundact(e));
 nextround.appendChild(nextimage);
 document.body.appendChild(nextround);
-nextround.style.visibility = 'hidden';
+nextround.style.display = 'none';
 
 
 

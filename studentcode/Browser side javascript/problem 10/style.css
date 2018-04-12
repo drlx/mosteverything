@@ -3,7 +3,10 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-    background-image: url("background.png");
+    background: url(background.png) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
     
 }
@@ -14,7 +17,8 @@ button {
     margin-left: auto;
     margin-right: auto;
     padding-top: 10%;
-    width: 50%;
+    max-width: 80%;
+    max-height: 100%;
 }
 
 .zoom {
@@ -31,9 +35,11 @@ h1 {
     position: absolute;
     top: 50%;
     width: 100%;
+    margin: auto;
     text-align: center;
     color: white; 
     font-family: 'Press Start 2P', cursive;
+    
 }
 
 h3 {
@@ -43,6 +49,7 @@ h3 {
     text-align: center;
     color: white; 
     font-family: 'Press Start 2P', cursive;
+    /* display: none; */
 }
 
 #playeroneearly, #playertwoearly {
@@ -62,6 +69,8 @@ h3 {
    position: absolute;
    left: 10%;
    bottom: 10px;
+   max-height: 50%;
+   width: auto;
 }
 
 #playertwo {
@@ -69,18 +78,31 @@ h3 {
    position: absolute;
    right: 10%;
    bottom: 10px;
+   max-height: 50%;
+   width: auto;
+}
+
+#nextround, #playagain, #start2 {
+    max-width: 80%;
+    height: auto;
+    margin: auto; 
 }
 
 .playertwoscore {
     display: none;
     position: absolute;
-    left: 10%;
+    left: 5%;
     top: 10px;
+    height: auto;
+    max-width: 30%;
 }
 
 .playeronescore {
     display: none;
     position: absolute;
-    right: 10%;
+    right: 5%;
     top: 10px;
+    height: auto;
+    max-width: 30%;
 }
+
