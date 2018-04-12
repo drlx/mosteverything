@@ -30,6 +30,28 @@ class h1 {
     }
 }
 
+class ul{
+    constructor(textarray){
+    this.textarray = textarray;
+    }
+render(){
+    var ret = document.createElement('ul');
+    this.textarray.forEach(x => {ret.appendChild(x.render())});
+    return ret;
+}
+}
+
+class li{
+    constructor(text){
+        this.text = text;
+    }
+    render(){
+        var ret = document.createElement("li");
+        ret.innerText = this.text;
+        return ret;  
+    }
+}
+
 
 populate(document.getElementById('root'),
     new ul([

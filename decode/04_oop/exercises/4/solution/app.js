@@ -30,28 +30,25 @@ class h1 {
     }
 }
 
-class ul {
-    constructor(children) {
-        this.children = children;
+class ul{
+    constructor(textarray){
+    this.textarray = textarray;
     }
-    render() {
-        var ret = document.createElement("ul");
-        for (var i = 0; i < this.children.length; i++) {
-            ret.appendChild(this.children[i].render());
-        }
-        return ret;
-    }
+render(){
+    var ret = document.createElement('ul');
+    this.textarray.forEach(x => {ret.appendChild(x.render())});
+    return ret;
+}
 }
 
-
-class li {
-    constructor(text) {
+class li{
+    constructor(text){
         this.text = text;
     }
-    render() {
+    render(){
         var ret = document.createElement("li");
         ret.innerText = this.text;
-        return ret;
+        return ret;  
     }
 }
 

@@ -12,3 +12,8 @@ class Dog {
 }
 
 var someDog = new Dog("schnitzel", 2, "male");
+
+
+————————————
+
+[somedog|  ] —> [breed:schnitzel,age:2,gender:male,proto:   ]—> [bark| ] —> function 

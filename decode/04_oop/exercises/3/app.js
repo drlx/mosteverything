@@ -52,7 +52,12 @@ class div {
     }
 }
 
+var header1 = new h1("I love javascript");
+var header2 = new h2("so much");
+var header3 = new h3("not kidding");
 
 
 populate(document.getElementById('root'),
-    new div([new h1("I love javascript")]))
+    new div(  [header1,header2,header3]  ))  
+
+
