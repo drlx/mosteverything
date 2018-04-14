@@ -1,6 +1,6 @@
 // This sectin contains some game constants. It is not super interesting
-var GAME_WIDTH = 375;
-var GAME_HEIGHT = 500;
+var GAME_WIDTH = 500;
+var GAME_HEIGHT = 750;
 
 var ENEMY_WIDTH = 75;
 var ENEMY_HEIGHT = 156;
@@ -8,6 +8,10 @@ var MAX_ENEMIES = 3;
 
 var PLAYER_WIDTH = 75;
 var PLAYER_HEIGHT = 54;
+
+var ROAD_HEIGHT = 250;
+var ROAD_WIDTH = 500;
+var MAX_ROAD = 5;
 
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
@@ -19,13 +23,13 @@ var MOVE_RIGHT = 'right';
 
 // Preload game images
 var images = {};
-['enemy.png', 'stars.png', 'player.png'].forEach(imgName => {
+[ 'rainbowroad.png','enemy.png', 'player.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
-});
+});  
 
-
+images['rainbowroad.png'].id = 'road';
 
 class Entity {
     render(ctx) {
@@ -43,6 +47,22 @@ class Enemy extends Entity {
 
         // Each enemy should have a different speed
         this.speed = Math.random() / 2 + 0.25;
+    }
+
+    update(timeDiff) {
+        this.y = this.y + timeDiff * this.speed;
+    }
+}
+
+class Road extends Entity{
+    constructor(xPos) {
+        super();
+        this.x = xPos;
+        this.y = -ROAD_HEIGHT;
+        this.sprite = images['rainbowroad.png'];
+
+        // Each enemy should have a different speed
+        this.speed = 0.25;
     }
 
     update(timeDiff) {
@@ -71,8 +91,6 @@ class Player extends Entity {
 
 
 
-
-
 /*
 This section is a tiny game engine.
 This engine will use your Enemy and Player classes to create the behavior of the game.
@@ -85,6 +103,7 @@ class Engine {
 
         // Setup enemies, making sure there are always three
         this.setupEnemies();
+        this.setupRoad();
 
         // Setup the <canvas> element where we will be drawing
         var canvas = document.createElement('canvas');
@@ -125,6 +144,29 @@ class Engine {
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
     }
 
+    setupRoad() {
+        if (!this.roadtiles) {
+            this.roadtiles = [];
+        }
+        
+        while (this.roadtiles.filter(e => !!e).filter(e=> e.y < -5).length == 0) {
+            this.addRoad();
+        }
+    }
+
+    addRoad() {
+        var enemySpots = 6;
+
+        var enemySpot;
+
+        while (this.roadtiles[enemySpot]) {
+          enemySpot = Math.floor(Math.random() * enemySpots);
+        }
+
+        this.roadtiles[enemySpot] = new Road(0);
+    }
+
+
     // This method kicks off the game
     start() {
         this.score = 0;
@@ -162,11 +204,18 @@ class Engine {
         this.score += timeDiff;
 
         // Call update on all enemies
+        this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
+        console.log(this.roadtiles);
+        
+        
 
         // Draw everything!
-        this.ctx.drawImage(images['stars.png'], 0, 0); // draw the star bg
+        // this.ctx.drawImage(images['rainbowroad.png'], 0, 0); // draw the star bg
+
+
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
+        this.roadtiles.forEach(roadtile => roadtile.render(this.ctx)); // draw the road
         this.player.render(this.ctx); // draw the player
 
         // Check if any enemies should die
@@ -175,6 +224,13 @@ class Engine {
                 delete this.enemies[enemyIdx];
             }
         });
+        this.roadtiles.forEach((roadtile, enemyIdx) => {
+            if (roadtile.y > GAME_HEIGHT) {
+                delete this.roadtiles[enemyIdx];
+            }
+        });
+        
+        this.setupRoad();
         this.setupEnemies();
 
         // Check if player is dead
@@ -197,8 +253,6 @@ class Engine {
     }
 
     isPlayerDead() {
-        console.log(this.enemies[2])
-        console.log(this.player)
         return this.enemies.some(enemy => {
             return (enemy.x === this.player.x) && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/2 > this.player.y) 
             && (enemy.y < this.player.y - ENEMY_HEIGHT/4))
