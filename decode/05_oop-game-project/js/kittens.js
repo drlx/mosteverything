@@ -38,6 +38,10 @@ var PLAYER_WIDTH = 100;
 var PLAYER_HEIGHT = 100;
 var PLAYER_SPEED = 0.15;
 
+var ITEM_HEIGHT = 100;
+var ITEM_WIDTH = 100;
+var MAX_ITEMS = 2;
+
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
 var MAX_ROAD = 5;
@@ -69,7 +73,7 @@ var keys = { left: false, right: false, up: false, down: false };
 var images = {};
 ['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
@@ -98,6 +102,22 @@ class Enemy extends Entity {
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed - (Math.random() * 3 + 1);
         this.x = this.x + Math.random() * 1 - Math.random() * 1;
+    }
+}
+
+class Item extends Entity {
+    constructor(xPos) {
+        super();
+        this.x = xPos;
+        this.y = -ITEM_HEIGHT;
+        this.sprite = images['item.png'];
+
+        // Each enemy should have a different speed
+        this.speed = 0.25;
+    }
+
+    update(timeDiff) {
+        this.y = this.y + timeDiff * this.speed;;
     }
 }
 
@@ -219,6 +239,7 @@ class Engine {
         // Setup enemies, making sure there are always three
         this.setupShells();
         this.setupEnemies();
+        this.setupItems();
         this.setupSampleRoad();
 
 
@@ -260,6 +281,30 @@ class Engine {
         }
 
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
+    }
+
+    setupItems() {
+        if (!this.items) {
+            this.items = [];
+        }
+
+        var chance = Math.random();
+
+        while (this.items.filter(e => !!e).length < MAX_ITEMS) {
+            this.addItem();
+        }
+    }
+
+    addItem() {
+        var itemSpots = GAME_WIDTH / ITEM_WIDTH;
+
+        var itemSpot;
+        // Keep looping until we find a free enemy spot at random
+        while (this.items[itemSpot]) {
+            itemSpot = Math.floor(Math.random() * itemSpots);
+        }
+        console.log('hello')
+        this.items[itemSpot] = new Item(itemSpot * ITEM_WIDTH);
     }
 
     setupSampleRoad() {
@@ -389,6 +434,7 @@ class Engine {
         this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
         this.shells.forEach(enemy => enemy.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
+        this.items.forEach(item => item.update(timeDiff));
         this.player.update(timeDiff);
 
 
@@ -401,7 +447,7 @@ class Engine {
         this.roadtiles.forEach(roadtile => roadtile.render(this.ctx)); // draw the road
         this.shells.forEach(enemy => enemy.render(this.ctx));
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
-
+        this.items.forEach(item => item.render(this.ctx));
         this.player.render(this.ctx); // draw the player
 
         // Check if any enemies should die
@@ -420,13 +466,20 @@ class Engine {
                 delete this.shells[enemyIdx];
             }
         });
+        this.items.forEach((item, enemyIdx) => {
+            if (item.y > GAME_HEIGHT) {
+                delete this.items[enemyIdx];
+            }
+        });
 
         this.setupRoad();
         this.setupShells();
         this.setupEnemies();
+        this.setupItems();
 
 
         this.isEnemyDead();
+        this.isItemDead();
 
 
 
@@ -479,17 +532,6 @@ class Engine {
 
 
     isEnemyDead() {
-
-        // this.enemies.forEach((enemy,i) => {
-
-
-        //     if (this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x && enemy.x <= shell.x + SHELL_WIDTH
-        //         && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
-        //         && enemy.y < shell.y - SHELL_HEIGHT / 4) ) {
-        //             delete this.enemies[i];
-        //         } 
-        //     })
-
         this.enemies.forEach((enemy, i) => {
             this.shells.forEach((shell, j) => {
                 if (enemy.x + ENEMY_WIDTH >= shell.x
@@ -501,6 +543,17 @@ class Engine {
                 }
             })
         })
+    }
+
+    isItemDead() {
+            this.items.forEach((item, j) => {
+                if (this.player.x + PLAYER_WIDTH >= item.x
+                    && this.player.x <= item.x + ITEM_WIDTH
+                    && this.player.y + PLAYER_HEIGHT - ITEM_HEIGHT / 4 > item.y
+                    && this.player.y <= item.y + ITEM_HEIGHT) {
+                        delete this.items[j];
+                }
+            })
     }
 
     isPlayerDead() {
