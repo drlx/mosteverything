@@ -63,7 +63,7 @@ var keys = {left: false, right: false, up: false, down: false};
 // Preload game images
 var images = {};
 [ 'rainbowroad.png','enemy1.png','enemy2.png','enemy3.png',
-'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png','playerleft.png','playerright.png'].forEach(imgName => {
+'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png','playerleft1.png','playerright1.png','rainbowstart.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -90,7 +90,7 @@ class Enemy extends Entity {
     }
 
     update(timeDiff) {
-        this.y = this.y + timeDiff * this.speed;
+        this.y = this.y + timeDiff * this.speed - (Math.random()*3+1);
         this.x = this.x + Math.random()*1 - Math.random()*1;
     }
 }
@@ -125,6 +125,15 @@ class RoadSample extends Entity{
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
+    }
+}
+
+class RoadStart extends RoadSample{
+    constructor(xPos,yPos) {
+        super();
+        this.x = xPos;
+        this.y = yPos;
+        this.sprite = images['rainbowstart.png'];
     }
 }
 
@@ -230,7 +239,7 @@ class Engine {
         if (!this.roadtiles) {
             this.roadtiles = [];
         }
-        this.roadtiles[0] = new RoadSample(0,0);
+        this.roadtiles[0] = new RoadStart(0,0);
         this.roadtiles[1] = new RoadSample(0,ROAD_HEIGHT);
         this.roadtiles[2] = new RoadSample(0,ROAD_HEIGHT*2);
         this.roadtiles[3] = new RoadSample(0,ROAD_HEIGHT*3);
@@ -270,11 +279,13 @@ class Engine {
         document.addEventListener('keydown', e => {
             if (e.keyCode === LEFT_ARROW_CODE) {
                 keys.left = true;
+                this.player.sprite = images['playerleft1.png'];
                 //this.player.move(MOVE_LEFT);
             }
             else if (e.keyCode === RIGHT_ARROW_CODE) {
                 //this.player.move(MOVE_RIGHT);
                 keys.right = true;
+                this.player.sprite = images['playerright1.png'];
             }
             else if (e.keyCode === UP_ARROW_CODE) {
                 //this.player.move(MOVE_UP);
@@ -289,10 +300,12 @@ class Engine {
         document.addEventListener('keyup', e => {
             if (e.keyCode === LEFT_ARROW_CODE) {
                 keys.left = false;
+                this.player.sprite = images['player1.png'];
                 //this.player.move(MOVE_LEFT);
             }
             else if (e.keyCode === RIGHT_ARROW_CODE) {
                 //this.player.move(MOVE_RIGHT);
+                this.player.sprite = images['player1.png'];
                 keys.right = false;
             }
             else if (e.keyCode === UP_ARROW_CODE) {
