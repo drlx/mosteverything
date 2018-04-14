@@ -1,6 +1,19 @@
 // This sectin contains some game constants. It is not super interesting
+
+var MAKE_SOUNDS = () => {
 var THEME_MUSIC = new Audio('theme.mp3');
 THEME_MUSIC.play();
+THEME_MUSIC.loop = true;
+var START_SOUND = new Audio('start.mp3');
+START_SOUND.play();
+var ENGINE_NOISE = new Audio('engine0.wav');
+ENGINE_NOISE.play();
+ENGINE_NOISE.loop = true;
+var SPEED_UP_SOUND = new Audio('engine8.wav');
+
+}
+
+MAKE_SOUNDS();
 
 var ENEMY_NUMBER = 1
 var RANDOM_ENEMY = () => {
@@ -23,6 +36,7 @@ var MAX_ENEMIES = 3;
 
 var PLAYER_WIDTH = 100;
 var PLAYER_HEIGHT = 100;
+var PLAYER_SPEED = 0.15;
 
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
@@ -33,15 +47,23 @@ var ROAD_SPEED = 0.25
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
 var RIGHT_ARROW_CODE = 39;
+var UP_ARROW_CODE = 38;
+var DOWN_ARROW_CODE = 40;
 
 // These two constants allow us to DRY
 var MOVE_LEFT = 'left';
 var MOVE_RIGHT = 'right';
+var MOVE_UP = 'up';
+var MOVE_DOWN = 'down';
+
+//Smooth movement
+
+var keys = {left: false, right: false, up: false, down: false};
 
 // Preload game images
 var images = {};
 [ 'rainbowroad.png','enemy1.png','enemy2.png','enemy3.png',
-'enemy4.png','enemy5.png','enemy6.png','player1.png', 'restart.png'].forEach(imgName => {
+'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png','playerleft.png','playerright.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -69,6 +91,7 @@ class Enemy extends Entity {
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
+        this.x = this.x + Math.random()*1 - Math.random()*1;
     }
 }
 
@@ -111,15 +134,37 @@ class Player extends Entity {
         this.x = 2 * PLAYER_WIDTH;
         this.y = GAME_HEIGHT - PLAYER_HEIGHT - 10;
         this.sprite = images['player1.png'];
+        this.speed = PLAYER_SPEED;
     }
 
     // This method is called by the game engine when left/right arrows are pressed
     move(direction) {
         if (direction === MOVE_LEFT && this.x > 0) {
-            this.x = this.x - PLAYER_WIDTH;
+            this.x = this.x - PLAYER_WIDTH/10;
         }
-        else if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
-            this.x = this.x + PLAYER_WIDTH;
+        if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
+            this.x = this.x + PLAYER_WIDTH/10;
+        }
+        if (direction === MOVE_UP && this.y < GAME_HEIGHT) {
+            this.y = this.y - PLAYER_HEIGHT/10;
+                SPEED_UP_SOUND.play();
+        }
+        if (direction === MOVE_DOWN && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
+            this.y = this.y + PLAYER_HEIGHT/10;
+        }
+    }
+    update(timeDiff) {
+        if (keys.down === true && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
+            this.y = this.y + timeDiff * this.speed;
+        }
+        if (keys.up === true && this.y < GAME_HEIGHT) {
+            this.y = this.y - timeDiff * this.speed;
+        }
+        if (keys.left === true && this.x > 0) {
+            this.x = this.x - timeDiff * this.speed;
+        }
+        if (keys.right === true && this.x < GAME_WIDTH - PLAYER_WIDTH) {
+            this.x = this.x + timeDiff * this.speed;
         }
     }
 }
@@ -224,10 +269,39 @@ class Engine {
         // Listen for keyboard left/right and update the player
         document.addEventListener('keydown', e => {
             if (e.keyCode === LEFT_ARROW_CODE) {
-                this.player.move(MOVE_LEFT);
+                keys.left = true;
+                //this.player.move(MOVE_LEFT);
             }
             else if (e.keyCode === RIGHT_ARROW_CODE) {
-                this.player.move(MOVE_RIGHT);
+                //this.player.move(MOVE_RIGHT);
+                keys.right = true;
+            }
+            else if (e.keyCode === UP_ARROW_CODE) {
+                //this.player.move(MOVE_UP);
+                keys.up = true;
+            }
+            else if (e.keyCode === DOWN_ARROW_CODE) {
+               //this.player.move(MOVE_DOWN);
+               keys.down = true;
+            }
+        });
+
+        document.addEventListener('keyup', e => {
+            if (e.keyCode === LEFT_ARROW_CODE) {
+                keys.left = false;
+                //this.player.move(MOVE_LEFT);
+            }
+            else if (e.keyCode === RIGHT_ARROW_CODE) {
+                //this.player.move(MOVE_RIGHT);
+                keys.right = false;
+            }
+            else if (e.keyCode === UP_ARROW_CODE) {
+                //this.player.move(MOVE_UP);
+                keys.up = false;
+            }
+            else if (e.keyCode === DOWN_ARROW_CODE) {
+               //this.player.move(MOVE_DOWN);
+               keys.down = false;
             }
         });
 
@@ -255,6 +329,7 @@ class Engine {
         // Call update on all enemies
         this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
+        this.player.update(timeDiff);
     
         
         
@@ -331,7 +406,9 @@ class Engine {
 
     isPlayerDead() {
         return this.enemies.some(enemy => {
-            return (enemy.x === this.player.x) && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/2 > this.player.y) 
+            return (enemy.x + ENEMY_WIDTH  >= this.player.x && 
+                enemy.x <= this.player.x + PLAYER_WIDTH ) 
+            && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/2 > this.player.y) 
             && (enemy.y < this.player.y - ENEMY_HEIGHT/4))
         })
     }
