@@ -6,12 +6,14 @@ var ENEMY_WIDTH = 75;
 var ENEMY_HEIGHT = 156;
 var MAX_ENEMIES = 3;
 
-var PLAYER_WIDTH = 75;
-var PLAYER_HEIGHT = 54;
+var PLAYER_WIDTH = 100;
+var PLAYER_HEIGHT = 100;
 
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
 var MAX_ROAD = 5;
+
+var ROAD_SPEED = 0.25
 
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
@@ -23,7 +25,7 @@ var MOVE_RIGHT = 'right';
 
 // Preload game images
 var images = {};
-[ 'rainbowroad.png','enemy.png', 'player.png'].forEach(imgName => {
+[ 'rainbowroad.png','enemy.png', 'player1.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -62,7 +64,23 @@ class Road extends Entity{
         this.sprite = images['rainbowroad.png'];
 
         // Each enemy should have a different speed
-        this.speed = 0.25;
+        this.speed = ROAD_SPEED;
+    }
+
+    update(timeDiff) {
+        this.y = this.y + timeDiff * this.speed;
+    }
+}
+
+class RoadSample extends Entity{
+    constructor(xPos,yPos) {
+        super();
+        this.x = xPos;
+        this.y = yPos;
+        this.sprite = images['rainbowroad.png'];
+
+        // Each enemy should have a different speed
+        this.speed = ROAD_SPEED;
     }
 
     update(timeDiff) {
@@ -75,7 +93,7 @@ class Player extends Entity {
         super();
         this.x = 2 * PLAYER_WIDTH;
         this.y = GAME_HEIGHT - PLAYER_HEIGHT - 10;
-        this.sprite = images['player.png'];
+        this.sprite = images['player1.png'];
     }
 
     // This method is called by the game engine when left/right arrows are pressed
@@ -103,7 +121,8 @@ class Engine {
 
         // Setup enemies, making sure there are always three
         this.setupEnemies();
-        this.setupRoad();
+        this.setupSampleRoad();
+
 
         // Setup the <canvas> element where we will be drawing
         var canvas = document.createElement('canvas');
@@ -142,6 +161,18 @@ class Engine {
         }
 
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
+    }
+
+    setupSampleRoad(){
+        if (!this.roadtiles) {
+            this.roadtiles = [];
+        }
+        this.roadtiles[0] = new RoadSample(0,0);
+        this.roadtiles[1] = new RoadSample(0,ROAD_HEIGHT);
+        this.roadtiles[2] = new RoadSample(0,ROAD_HEIGHT*2);
+        this.roadtiles[3] = new RoadSample(0,ROAD_HEIGHT*3);
+        this.roadtiles[4] = new RoadSample(0,ROAD_HEIGHT*4);
+        this.setupRoad()
     }
 
     setupRoad() {
@@ -206,16 +237,17 @@ class Engine {
         // Call update on all enemies
         this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
-        console.log(this.roadtiles);
+    
         
         
 
         // Draw everything!
         // this.ctx.drawImage(images['rainbowroad.png'], 0, 0); // draw the star bg
 
-
-        this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.roadtiles.forEach(roadtile => roadtile.render(this.ctx)); // draw the road
+        
+        this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
+
         this.player.render(this.ctx); // draw the player
 
         // Check if any enemies should die
