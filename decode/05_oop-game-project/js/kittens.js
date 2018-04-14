@@ -41,20 +41,25 @@ var PLAYER_SPEED = 0.15;
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
 var MAX_ROAD = 5;
-
 var ROAD_SPEED = 0.25
+
+var SHELL_HEIGHT = 50;
+var SHELL_WIDTH = 50;
+var MAX_SHELLS = 3;
 
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
 var RIGHT_ARROW_CODE = 39;
 var UP_ARROW_CODE = 38;
 var DOWN_ARROW_CODE = 40;
+var SPACE_BAR_CODE = 32;
 
 // These two constants allow us to DRY
 var MOVE_LEFT = 'left';
 var MOVE_RIGHT = 'right';
 var MOVE_UP = 'up';
 var MOVE_DOWN = 'down';
+var SHOOT = 'fire';
 
 //Smooth movement
 
@@ -63,7 +68,8 @@ var keys = {left: false, right: false, up: false, down: false};
 // Preload game images
 var images = {};
 [ 'rainbowroad.png','enemy1.png','enemy2.png','enemy3.png',
-'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png','playerleft1.png','playerright1.png','rainbowstart.png'].forEach(imgName => {
+'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png',
+'playerleft1.png','playerright1.png','rainbowstart.png','redshell.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -92,6 +98,22 @@ class Enemy extends Entity {
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed - (Math.random()*3+1);
         this.x = this.x + Math.random()*1 - Math.random()*1;
+    }
+}
+
+class Shell extends Entity {
+    constructor(xPos,yPos) {
+        super();
+        this.x = xPos;
+        this.y = yPos;
+        this.sprite = images['redshell.png'];
+
+        // Each enemy should have a different speed
+        this.speed = 0.5;
+    }
+
+    update(timeDiff) {
+        this.y = this.y - timeDiff * this.speed;
     }
 }
 
@@ -161,6 +183,10 @@ class Player extends Entity {
         if (direction === MOVE_DOWN && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
             this.y = this.y + PLAYER_HEIGHT/10;
         }
+        if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3) {
+            gameEngine.addShell();
+        }
+        
     }
     update(timeDiff) {
         if (keys.down === true && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
@@ -191,6 +217,7 @@ class Engine {
         this.player = new Player();
 
         // Setup enemies, making sure there are always three
+        this.setupShells();
         this.setupEnemies();
         this.setupSampleRoad();
 
@@ -269,6 +296,22 @@ class Engine {
         this.roadtiles[enemySpot] = new Road(0);
     }
 
+    addShell() {
+        var shellSpots = MAX_SHELLS;
+        var shellSpot;
+
+        while (this.shells[shellSpot]) {
+          shellSpot = Math.floor(Math.random() * shellSpots);
+        }
+
+        this.shells[shellSpot] = new Shell(this.player.x+25,this.player.y);
+    }
+    setupShells() {
+        if (!this.shells) {
+            this.shells = [];
+        }
+    }
+
 
     // This method kicks off the game
     start() {
@@ -294,6 +337,9 @@ class Engine {
             else if (e.keyCode === DOWN_ARROW_CODE) {
                //this.player.move(MOVE_DOWN);
                keys.down = true;
+            }
+            else if (e.keyCode === SPACE_BAR_CODE) {
+                this.player.move(SHOOT);
             }
         });
 
@@ -341,8 +387,10 @@ class Engine {
 
         // Call update on all enemies
         this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
+        this.shells.forEach(enemy => enemy.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
         this.player.update(timeDiff);
+        
     
         
         
@@ -351,7 +399,7 @@ class Engine {
         // this.ctx.drawImage(images['rainbowroad.png'], 0, 0); // draw the star bg
 
         this.roadtiles.forEach(roadtile => roadtile.render(this.ctx)); // draw the road
-        
+        this.shells.forEach(enemy => enemy.render(this.ctx));
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
 
         this.player.render(this.ctx); // draw the player
@@ -367,8 +415,14 @@ class Engine {
                 delete this.roadtiles[enemyIdx];
             }
         });
+        this.shells.forEach((shell, enemyIdx) => {
+            if (shell.y < 0) {
+                delete this.shells[enemyIdx];
+            }
+        });
         
         this.setupRoad();
+        this.setupShells();
         this.setupEnemies();
 
         // Check if player is dead
@@ -416,13 +470,35 @@ class Engine {
             requestAnimationFrame(this.gameLoop);
         }
     }
+   
+
+
+    isEnemyDead() {
+        return this.enemies.some(enemy => {
+            return (
+                
+                this.shells.some(shell => enemy.x + ENEMY_WIDTH  >= shell.x)
+                
+                &&
+
+                this.shells.some(shell => enemy.x <= shell.x + SHELL_WIDTH ) 
+
+            && 
+            
+            this.shells.some(shell => enemy.y+ENEMY_HEIGHT-SHELL_HEIGHT/2 > shell.y) 
+            && 
+            
+            this.shells.some(shell => enemy.y < shell.y - SHELL_HEIGHT/4)
+        )
+        })
+    }
 
     isPlayerDead() {
         return this.enemies.some(enemy => {
             return (enemy.x + ENEMY_WIDTH  >= this.player.x && 
                 enemy.x <= this.player.x + PLAYER_WIDTH ) 
-            && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/2 > this.player.y) 
-            && (enemy.y < this.player.y - ENEMY_HEIGHT/4))
+            && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/10 > this.player.y) 
+            && (enemy.y < this.player.y + PLAYER_HEIGHT*0.9))
         })
     }
 }
