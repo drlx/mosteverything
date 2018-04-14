@@ -1,15 +1,15 @@
 // This sectin contains some game constants. It is not super interesting
 
 var MAKE_SOUNDS = () => {
-var THEME_MUSIC = new Audio('theme.mp3');
-THEME_MUSIC.play();
-THEME_MUSIC.loop = true;
-var START_SOUND = new Audio('start.mp3');
-START_SOUND.play();
-var ENGINE_NOISE = new Audio('engine0.wav');
-ENGINE_NOISE.play();
-ENGINE_NOISE.loop = true;
-var SPEED_UP_SOUND = new Audio('engine8.wav');
+    var THEME_MUSIC = new Audio('theme.mp3');
+    THEME_MUSIC.play();
+    THEME_MUSIC.loop = true;
+    var START_SOUND = new Audio('start.mp3');
+    START_SOUND.play();
+    var ENGINE_NOISE = new Audio('engine0.wav');
+    ENGINE_NOISE.play();
+    ENGINE_NOISE.loop = true;
+    var SPEED_UP_SOUND = new Audio('engine8.wav');
 
 }
 
@@ -63,24 +63,24 @@ var SHOOT = 'fire';
 
 //Smooth movement
 
-var keys = {left: false, right: false, up: false, down: false};
+var keys = { left: false, right: false, up: false, down: false };
 
 // Preload game images
 var images = {};
-[ 'rainbowroad.png','enemy1.png','enemy2.png','enemy3.png',
-'enemy4.png','enemy5.png','player1.png','enemy6.png','restart.png',
-'playerleft1.png','playerright1.png','rainbowstart.png','redshell.png'].forEach(imgName => {
-    var img = document.createElement('img');
-    img.src = 'images/' + imgName;
-    images[imgName] = img;
-});  
+['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
+    'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png'].forEach(imgName => {
+        var img = document.createElement('img');
+        img.src = 'images/' + imgName;
+        images[imgName] = img;
+    });
 
 images['rainbowroad.png'].id = 'road';
 
 class Entity {
     render(ctx) {
         ctx.drawImage(this.sprite, this.x, this.y);
-    }  
+    }
 }
 
 // This section is where you will be doing most of your coding
@@ -88,21 +88,21 @@ class Enemy extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
-        this.y = -ENEMY_HEIGHT - Math.random()*600;
-        this.sprite = images['enemy'+RANDOM_ENEMY()+'.png'];
+        this.y = -ENEMY_HEIGHT - Math.random() * 600;
+        this.sprite = images['enemy' + RANDOM_ENEMY() + '.png'];
 
         // Each enemy should have a different speed
         this.speed = 0.25;
     }
 
     update(timeDiff) {
-        this.y = this.y + timeDiff * this.speed - (Math.random()*3+1);
-        this.x = this.x + Math.random()*1 - Math.random()*1;
+        this.y = this.y + timeDiff * this.speed - (Math.random() * 3 + 1);
+        this.x = this.x + Math.random() * 1 - Math.random() * 1;
     }
 }
 
 class Shell extends Entity {
-    constructor(xPos,yPos) {
+    constructor(xPos, yPos) {
         super();
         this.x = xPos;
         this.y = yPos;
@@ -117,7 +117,7 @@ class Shell extends Entity {
     }
 }
 
-class Road extends Entity{
+class Road extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
@@ -130,12 +130,12 @@ class Road extends Entity{
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
-        
+
     }
 }
 
-class RoadSample extends Entity{
-    constructor(xPos,yPos) {
+class RoadSample extends Entity {
+    constructor(xPos, yPos) {
         super();
         this.x = xPos;
         this.y = yPos;
@@ -150,8 +150,8 @@ class RoadSample extends Entity{
     }
 }
 
-class RoadStart extends RoadSample{
-    constructor(xPos,yPos) {
+class RoadStart extends RoadSample {
+    constructor(xPos, yPos) {
         super();
         this.x = xPos;
         this.y = yPos;
@@ -171,22 +171,22 @@ class Player extends Entity {
     // This method is called by the game engine when left/right arrows are pressed
     move(direction) {
         if (direction === MOVE_LEFT && this.x > 0) {
-            this.x = this.x - PLAYER_WIDTH/10;
+            this.x = this.x - PLAYER_WIDTH / 10;
         }
         if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
-            this.x = this.x + PLAYER_WIDTH/10;
+            this.x = this.x + PLAYER_WIDTH / 10;
         }
         if (direction === MOVE_UP && this.y < GAME_HEIGHT) {
-            this.y = this.y - PLAYER_HEIGHT/10;
-                SPEED_UP_SOUND.play();
+            this.y = this.y - PLAYER_HEIGHT / 10;
+            SPEED_UP_SOUND.play();
         }
         if (direction === MOVE_DOWN && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
-            this.y = this.y + PLAYER_HEIGHT/10;
+            this.y = this.y + PLAYER_HEIGHT / 10;
         }
         if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3) {
             gameEngine.addShell();
         }
-        
+
     }
     update(timeDiff) {
         if (keys.down === true && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
@@ -236,9 +236,9 @@ class Engine {
     }
 
     /*
-     The game allows for 5 horizontal slots where an enemy can be present.
-     At any point in time there can be at most MAX_ENEMIES enemies otherwise the game would be impossible
-     */
+    The game allows for 5 horizontal slots where an enemy can be present.
+    At any point in time there can be at most MAX_ENEMIES enemies otherwise the game would be impossible
+    */
     setupEnemies() {
         if (!this.enemies) {
             this.enemies = [];
@@ -256,21 +256,21 @@ class Engine {
         var enemySpot;
         // Keep looping until we find a free enemy spot at random
         while (this.enemies[enemySpot]) {
-           enemySpot = Math.floor(Math.random() * enemySpots);
+            enemySpot = Math.floor(Math.random() * enemySpots);
         }
 
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
     }
 
-    setupSampleRoad(){
+    setupSampleRoad() {
         if (!this.roadtiles) {
             this.roadtiles = [];
         }
-        this.roadtiles[0] = new RoadStart(0,0);
-        this.roadtiles[1] = new RoadSample(0,ROAD_HEIGHT);
-        this.roadtiles[2] = new RoadSample(0,ROAD_HEIGHT*2);
-        this.roadtiles[3] = new RoadSample(0,ROAD_HEIGHT*3);
-        this.roadtiles[4] = new RoadSample(0,ROAD_HEIGHT*4);
+        this.roadtiles[0] = new RoadStart(0, 0);
+        this.roadtiles[1] = new RoadSample(0, ROAD_HEIGHT);
+        this.roadtiles[2] = new RoadSample(0, ROAD_HEIGHT * 2);
+        this.roadtiles[3] = new RoadSample(0, ROAD_HEIGHT * 3);
+        this.roadtiles[4] = new RoadSample(0, ROAD_HEIGHT * 4);
         this.setupRoad()
     }
 
@@ -278,8 +278,8 @@ class Engine {
         if (!this.roadtiles) {
             this.roadtiles = [];
         }
-        
-        while (this.roadtiles.filter(e => !!e).filter(e=> e.y < -5).length == 0) {
+
+        while (this.roadtiles.filter(e => !!e).filter(e => e.y < -5).length == 0) {
             this.addRoad();
         }
     }
@@ -290,7 +290,7 @@ class Engine {
         var enemySpot;
 
         while (this.roadtiles[enemySpot]) {
-          enemySpot = Math.floor(Math.random() * enemySpots);
+            enemySpot = Math.floor(Math.random() * enemySpots);
         }
 
         this.roadtiles[enemySpot] = new Road(0);
@@ -301,10 +301,10 @@ class Engine {
         var shellSpot;
 
         while (this.shells[shellSpot]) {
-          shellSpot = Math.floor(Math.random() * shellSpots);
+            shellSpot = Math.floor(Math.random() * shellSpots);
         }
 
-        this.shells[shellSpot] = new Shell(this.player.x+25,this.player.y);
+        this.shells[shellSpot] = new Shell(this.player.x + 25, this.player.y);
     }
     setupShells() {
         if (!this.shells) {
@@ -335,8 +335,8 @@ class Engine {
                 keys.up = true;
             }
             else if (e.keyCode === DOWN_ARROW_CODE) {
-               //this.player.move(MOVE_DOWN);
-               keys.down = true;
+                //this.player.move(MOVE_DOWN);
+                keys.down = true;
             }
             else if (e.keyCode === SPACE_BAR_CODE) {
                 this.player.move(SHOOT);
@@ -359,8 +359,8 @@ class Engine {
                 keys.up = false;
             }
             else if (e.keyCode === DOWN_ARROW_CODE) {
-               //this.player.move(MOVE_DOWN);
-               keys.down = false;
+                //this.player.move(MOVE_DOWN);
+                keys.down = false;
             }
         });
 
@@ -372,11 +372,11 @@ class Engine {
     During each execution of the function, we will update the positions of all game entities
     It's also at this point that we will check for any collisions between the game entities
     Collisions will often indicate either a player death or an enemy kill
-
+    
     In order to allow the game objects to self-determine their behaviors, gameLoop will call the `update` method of each entity
     To account for the fact that we don't always have 60 frames per second, gameLoop will send a time delta argument to `update`
     You should use this parameter to scale your update appropriately
-     */
+    */
     gameLoop() {
         // Check how long it's been since last frame
         var currentFrame = Date.now();
@@ -390,10 +390,10 @@ class Engine {
         this.shells.forEach(enemy => enemy.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
         this.player.update(timeDiff);
-        
-    
-        
-        
+
+
+
+
 
         // Draw everything!
         // this.ctx.drawImage(images['rainbowroad.png'], 0, 0); // draw the star bg
@@ -420,7 +420,7 @@ class Engine {
                 delete this.shells[enemyIdx];
             }
         });
-        
+
         this.setupRoad();
         this.setupShells();
         this.setupEnemies();
@@ -437,13 +437,13 @@ class Engine {
             this.ctx.fillStyle = '#ffffff';
             this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
             this.ctx.drawImage(images['restart.png'], 0, 350);
-            
+
             var canvas = document.getElementById('canvas');
             var rect = {
-                x:0,
-                y:350,
-                width:500,
-                height:96
+                x: 0,
+                y: 350,
+                width: 500,
+                height: 96
             };
             function getMousePos(canvas, event) {
                 var rect = canvas.getBoundingClientRect();
@@ -452,13 +452,13 @@ class Engine {
                     y: event.clientY - rect.top
                 };
             }
-            function isInside(pos, rect){
-                return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+            function isInside(pos, rect) {
+                return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
             }
-            canvas.addEventListener('click', function(evt) {
+            canvas.addEventListener('click', function (evt) {
                 var mousePos = getMousePos(canvas, evt);
-            
-                if (isInside(mousePos,rect)) {
+
+                if (isInside(mousePos, rect)) {
                     location.reload();;
                 }
             }, false);
@@ -475,40 +475,40 @@ class Engine {
             requestAnimationFrame(this.gameLoop);
         }
     }
-   
+
 
 
     isEnemyDead() {
-        
-        this.enemies.forEach((enemy,i) => {
+
+        // this.enemies.forEach((enemy,i) => {
 
 
-            if (this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x && enemy.x <= shell.x + SHELL_WIDTH
-                && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
-                && enemy.y < shell.y - SHELL_HEIGHT / 4) ) {
-                    delete this.enemies[i];
+        //     if (this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x && enemy.x <= shell.x + SHELL_WIDTH
+        //         && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
+        //         && enemy.y < shell.y - SHELL_HEIGHT / 4) ) {
+        //             delete this.enemies[i];
+        //         } 
+        //     })
+
+        this.enemies.forEach((enemy, i) => {
+            this.shells.forEach((shell, j) => {
+                if (enemy.x + ENEMY_WIDTH >= shell.x
+                    && enemy.x <= shell.x + SHELL_WIDTH
+                    && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
+                    && enemy.y < shell.y - SHELL_HEIGHT / 4) {
+                        delete this.shells[j]
+                        delete this.enemies[i]
                 }
-
-                
             })
-        
-
-        // console.log(isDead);
-        // return isDead;
-
-
-
-        // var deadEnemy = x;
-
-        // return isDead
+        })
     }
 
     isPlayerDead() {
         return this.enemies.some(enemy => {
-            return (enemy.x + ENEMY_WIDTH  >= this.player.x && 
-                enemy.x <= this.player.x + PLAYER_WIDTH ) 
-            && ((enemy.y+ENEMY_HEIGHT-PLAYER_HEIGHT/10 > this.player.y) 
-            && (enemy.y < this.player.y + PLAYER_HEIGHT*0.9))
+            return (enemy.x + ENEMY_WIDTH >= this.player.x &&
+                enemy.x <= this.player.x + PLAYER_WIDTH)
+                && ((enemy.y + ENEMY_HEIGHT - PLAYER_HEIGHT / 10 > this.player.y)
+                    && (enemy.y < this.player.y + PLAYER_HEIGHT * 0.9))
         })
     }
 }
