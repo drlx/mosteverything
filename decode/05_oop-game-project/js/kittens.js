@@ -1,4 +1,19 @@
 // This sectin contains some game constants. It is not super interesting
+var THEME_MUSIC = new Audio('theme.mp3');
+THEME_MUSIC.play();
+
+var ENEMY_NUMBER = 1
+var RANDOM_ENEMY = () => {
+    //    return Math.floor(Math.random()*6)+1
+    ENEMY_NUMBER++;
+    if (ENEMY_NUMBER >= 6) {
+        ENEMY_NUMBER = 1;
+    }
+    return ENEMY_NUMBER;
+};
+
+
+
 var GAME_WIDTH = 500;
 var GAME_HEIGHT = 750;
 
@@ -25,7 +40,8 @@ var MOVE_RIGHT = 'right';
 
 // Preload game images
 var images = {};
-[ 'rainbowroad.png','enemy1.png', 'player1.png'].forEach(imgName => {
+[ 'rainbowroad.png','enemy1.png','enemy2.png','enemy3.png',
+'enemy4.png','enemy5.png','enemy6.png','player1.png', 'restart.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -44,8 +60,8 @@ class Enemy extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
-        this.y = -ENEMY_HEIGHT;
-        this.sprite = images['enemy1.png'];
+        this.y = -ENEMY_HEIGHT - Math.random()*600;
+        this.sprite = images['enemy'+RANDOM_ENEMY()+'.png'];
 
         // Each enemy should have a different speed
         this.speed = 0.25;
@@ -69,6 +85,7 @@ class Road extends Entity{
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
+        
     }
 }
 
@@ -126,6 +143,7 @@ class Engine {
 
         // Setup the <canvas> element where we will be drawing
         var canvas = document.createElement('canvas');
+        canvas.id = 'canvas';
         canvas.width = GAME_WIDTH;
         canvas.height = GAME_HEIGHT;
         element.appendChild(canvas);
@@ -271,6 +289,33 @@ class Engine {
             this.ctx.font = 'bold 30px Impact';
             this.ctx.fillStyle = '#ffffff';
             this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
+            this.ctx.drawImage(images['restart.png'], 0, 350);
+            
+            var canvas = document.getElementById('canvas');
+            var rect = {
+                x:0,
+                y:350,
+                width:500,
+                height:96
+            };
+            function getMousePos(canvas, event) {
+                var rect = canvas.getBoundingClientRect();
+                return {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+            }
+            function isInside(pos, rect){
+                return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+            }
+            canvas.addEventListener('click', function(evt) {
+                var mousePos = getMousePos(canvas, evt);
+            
+                if (isInside(mousePos,rect)) {
+                    location.reload();;
+                }
+            }, false);
+
         }
         else {
             // If player is not dead, then draw the score
