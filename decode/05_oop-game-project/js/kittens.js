@@ -426,21 +426,7 @@ class Engine {
         this.setupEnemies();
 
 
-        if (this.isEnemyDead()) {
-            // If they are dead, then it's game over!
-            this.ctx.font = 'bold 30px Impact';
-            this.ctx.fillStyle = '#ffffff';
-            this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
-            this.ctx.drawImage(images['restart.png'], 0, 350);
-            
-            var canvas = document.getElementById('canvas');
-            var rect = {
-                x:0,
-                y:350,
-                width:500,
-                height:96
-            };
-        }
+        this.isEnemyDead();
 
 
 
@@ -493,29 +479,22 @@ class Engine {
 
 
     isEnemyDead() {
-        // var isDead = this.enemies.some(enemy => {
-        //     return (
-        //         this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x)
-        //         &&
-        //         this.shells.some(shell => enemy.x <= shell.x + SHELL_WIDTH)
-        //         &&
-        //         this.shells.some(shell => enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y)
-        //         &&
-        //         this.shells.some(shell => enemy.y < shell.y - SHELL_HEIGHT / 4)
-        //     )
-        // })
-
-
-        var isDead = this.enemies.some(enemy => {
-            return (
-            this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x && enemy.x <= shell.x + SHELL_WIDTH
-                && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
-                && enemy.y < shell.y - SHELL_HEIGHT / 4) )
-        })
-
         
-        console.log(isDead);
-        return isDead;
+        this.enemies.forEach((enemy,i) => {
+
+
+            if (this.shells.some(shell => enemy.x + ENEMY_WIDTH >= shell.x && enemy.x <= shell.x + SHELL_WIDTH
+                && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
+                && enemy.y < shell.y - SHELL_HEIGHT / 4) ) {
+                    delete this.enemies[i];
+                }
+
+                
+            })
+        
+
+        // console.log(isDead);
+        // return isDead;
 
 
 
