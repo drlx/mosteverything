@@ -2,8 +2,8 @@
 var GAME_WIDTH = 500;
 var GAME_HEIGHT = 750;
 
-var ENEMY_WIDTH = 75;
-var ENEMY_HEIGHT = 156;
+var ENEMY_WIDTH = 100;
+var ENEMY_HEIGHT = 100;
 var MAX_ENEMIES = 3;
 
 var PLAYER_WIDTH = 100;
@@ -25,7 +25,7 @@ var MOVE_RIGHT = 'right';
 
 // Preload game images
 var images = {};
-[ 'rainbowroad.png','enemy.png', 'player1.png'].forEach(imgName => {
+[ 'rainbowroad.png','enemy1.png', 'player1.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -45,10 +45,10 @@ class Enemy extends Entity {
         super();
         this.x = xPos;
         this.y = -ENEMY_HEIGHT;
-        this.sprite = images['enemy.png'];
+        this.sprite = images['enemy1.png'];
 
         // Each enemy should have a different speed
-        this.speed = Math.random() / 2 + 0.25;
+        this.speed = 0.25;
     }
 
     update(timeDiff) {
