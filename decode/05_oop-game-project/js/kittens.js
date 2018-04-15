@@ -50,6 +50,7 @@ var ROAD_SPEED = 0.25
 var SHELL_HEIGHT = 50;
 var SHELL_WIDTH = 50;
 var MAX_SHELLS = 3;
+var NUMBER_SHELLS = 0;
 
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
@@ -109,7 +110,7 @@ class Item extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
-        this.y = -ITEM_HEIGHT - Math.random()*2500;
+        this.y = -ITEM_HEIGHT - Math.random()*1000;
         this.sprite = images['item.png'];
 
         // Each enemy should have a different speed
@@ -203,8 +204,11 @@ class Player extends Entity {
         if (direction === MOVE_DOWN && this.y + PLAYER_HEIGHT < GAME_HEIGHT) {
             this.y = this.y + PLAYER_HEIGHT / 10;
         }
-        if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3) {
+        if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3 && NUMBER_SHELLS > 0) {
             gameEngine.addShell();
+            if (NUMBER_SHELLS > 0){
+            NUMBER_SHELLS--;}
+            
         }
 
     }
@@ -288,9 +292,7 @@ class Engine {
             this.items = [];
         }
         
-        if (Math.random()<0.998) return;
-
-        console.log(Math.random());
+        if (Math.random()<0.99) return;
 
         while (this.items.filter(e => !!e).length < MAX_ITEMS) {
             this.addItem();
@@ -554,6 +556,8 @@ class Engine {
                     && this.player.y + PLAYER_HEIGHT - ITEM_HEIGHT / 4 > item.y
                     && this.player.y <= item.y + ITEM_HEIGHT) {
                         delete this.items[j];
+                        if (NUMBER_SHELLS < 3){NUMBER_SHELLS++};
+                        console.log(NUMBER_SHELLS)
                 }
             })
     }
