@@ -5,23 +5,26 @@
     THEME_MUSIC.play();
     THEME_MUSIC.loop = true;
     var START_SOUND = new Audio('start.mp3');
+    START_SOUND.volume = 0.4;
     START_SOUND.play();
     var ENGINE_NOISE = new Audio('engine0.wav');
-    ENGINE_NOISE.volume = 0.2;
+    ENGINE_NOISE.volume = 0.3;
     ENGINE_NOISE.play();
     ENGINE_NOISE.loop = true;
     var SPEED_UP_SOUND = new Audio('engine8.wav');
     var SHELL_NOISE = new Audio('redshell.mp3');
     SHELL_NOISE.volume = 1;
     var MARIO_YAHOO = new Audio('yahoo.mp3');
-    MARIO_YAHOO.volume = 0.4;
+    MARIO_YAHOO.volume = 0.35;
+    var WOWOW_SOUND = new Audio('wowow.mp3');
+    WOWOW_SOUND.volume = 1;
 
 
 var ENEMY_NUMBER = 1
 var RANDOM_ENEMY = () => {
     //    return Math.floor(Math.random()*6)+1
     ENEMY_NUMBER++;
-    if (ENEMY_NUMBER >= 6) {
+    if (ENEMY_NUMBER > 6) {
         ENEMY_NUMBER = 1;
     }
     return ENEMY_NUMBER;
@@ -47,7 +50,7 @@ var MAX_ITEMS = 2;
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
 var MAX_ROAD = 5;
-var ROAD_SPEED = 0.25
+var ROAD_SPEED = 0.4;
 
 var SHELL_HEIGHT = 50;
 var SHELL_WIDTH = 50;
@@ -76,7 +79,7 @@ var keys = { left: false, right: false, up: false, down: false };
 var images = {};
 ['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png','enemy7.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
@@ -97,14 +100,40 @@ class Enemy extends Entity {
         this.x = xPos;
         this.y = -ENEMY_HEIGHT - Math.random() * 600;
         this.sprite = images['enemy' + RANDOM_ENEMY() + '.png'];
+        this.CHANGE_RIGHT = false;
+        this.CHANGE_LEFT = false;
+        this.RIGHT_COUNT = 0;
+        this.LEFT_COUNT = 0;
 
         // Each enemy should have a different speed
-        this.speed = 0.25;
+        this.speed = ROAD_SPEED;
     }
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed - (Math.random() * 3 + 1);
         this.x = this.x + Math.random() * 1 - Math.random() * 1;
+        if (Math.random()>0.997){ ///RANDOM LEFT LANE CHANGE
+            this.CHANGE_RIGHT = true
+        };
+        if (this.CHANGE_RIGHT === true && this.RIGHT_COUNT<=100 && this.x+ENEMY_WIDTH<GAME_WIDTH){
+            this.x++;
+            this.RIGHT_COUNT++;
+        }
+        if (this.RIGHT_COUNT >98){
+            this.CHANGE_RIGHT = false;
+            this.RIGHT_COUNT = 0
+        }
+        if (Math.random()>0.997){ ///RANDOM RIGHT LANE CHANGE
+            this.CHANGE_LEFT = true
+        };
+        if (this.CHANGE_LEFT === true && this.LEFT_COUNT<=100 && this.x>0){
+            this.x--;
+            this.LEFT_COUNT++;
+        }
+        if (this.RIGHT_COUNT >98){
+            this.CHANGE_LEFT = false;
+            this.LEFT_COUNT = 0;
+        }
     }
 }
 
@@ -116,7 +145,7 @@ class Item extends Entity {
         this.sprite = images['item.png'];
 
         // Each enemy should have a different speed
-        this.speed = 0.25;
+        this.speed = ROAD_SPEED;
     }
 
     update(timeDiff) {
@@ -209,7 +238,6 @@ class Player extends Entity {
         if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3 && NUMBER_SHELLS > 0) {
             gameEngine.addShell();
             if (NUMBER_SHELLS > 0){
-                console.log('HERE',NUMBER_SHELLS);
             NUMBER_SHELLS--;}
             
         }
@@ -223,10 +251,10 @@ class Player extends Entity {
             this.y = this.y - timeDiff * this.speed;
         }
         if (keys.left === true && this.x > 0) {
-            this.x = this.x - timeDiff * this.speed;
+            this.x = this.x - timeDiff * this.speed*1.5;
         }
         if (keys.right === true && this.x < GAME_WIDTH - PLAYER_WIDTH) {
-            this.x = this.x + timeDiff * this.speed;
+            this.x = this.x + timeDiff * this.speed*1.5;
         }
     }
 }
@@ -358,7 +386,6 @@ class Engine {
 
         this.shells[shellSpot] = new Shell(this.player.x + 25, this.player.y);
         SHELL_NOISE.play();
-        console.log('SPAWNING SHELL');
 
     }
     setupShells() {
@@ -467,7 +494,7 @@ class Engine {
             }
         });
         this.roadtiles.forEach((roadtile, enemyIdx) => {
-            if (roadtile.y > GAME_HEIGHT) {
+            if (roadtile.y > GAME_HEIGHT+10) {
                 delete this.roadtiles[enemyIdx];
             }
         });
@@ -500,7 +527,7 @@ class Engine {
             this.ctx.fillStyle = '#ffffff';
             this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
             this.ctx.drawImage(images['restart.png'], 0, 350);
-
+            WOWOW_SOUND.play();
             var canvas = document.getElementById('canvas');
             var rect = {
                 x: 0,
@@ -565,7 +592,6 @@ class Engine {
                     && this.player.y <= item.y + ITEM_HEIGHT) {
                         delete this.items[j];
                         if (NUMBER_SHELLS < 3){NUMBER_SHELLS++};
-                        console.log(NUMBER_SHELLS)
                 }
             })
     }
