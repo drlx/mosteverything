@@ -1,26 +1,26 @@
 // This sectin contains some game constants. It is not super interesting
 
-    var THEME_MUSIC = new Audio('theme.mp3');
-    THEME_MUSIC.volume = 0.3;
-    THEME_MUSIC.play();
-    THEME_MUSIC.loop = true;
-    var START_SOUND = new Audio('start.mp3');
-    START_SOUND.volume = 0.4;
-    START_SOUND.play();
-    var ENGINE_NOISE = new Audio('engine0.wav');
-    ENGINE_NOISE.volume = 0.25;
-    ENGINE_NOISE.play();
-    ENGINE_NOISE.loop = true;
-    var SPEED_UP_SOUND = new Audio('engine8.wav');
-    var SHELL_NOISE = new Audio('redshell.mp3');
-    SHELL_NOISE.volume = 1;
-    var MARIO_YAHOO = new Audio('yahoo.mp3');
-    MARIO_YAHOO.volume = 0.3;
-    var WOWOW_SOUND = new Audio('wowow.mp3');
-    WOWOW_SOUND.currentTime = 0.2;
-    WOWOW_SOUND.volume = 1;
-    var ITEM_SOUND = new Audio('item.mp3');
-    var END_THEME = new Audio('endtheme.mp3');
+var THEME_MUSIC = new Audio('theme.mp3');
+THEME_MUSIC.volume = 0.3;
+THEME_MUSIC.play();
+THEME_MUSIC.loop = true;
+var START_SOUND = new Audio('start.mp3');
+START_SOUND.volume = 0.4;
+START_SOUND.play();
+var ENGINE_NOISE = new Audio('engine0.wav');
+ENGINE_NOISE.volume = 0.25;
+ENGINE_NOISE.play();
+ENGINE_NOISE.loop = true;
+var SPEED_UP_SOUND = new Audio('engine8.wav');
+var SHELL_NOISE = new Audio('redshell.mp3');
+SHELL_NOISE.volume = 1;
+var MARIO_YAHOO = new Audio('yahoo.mp3');
+MARIO_YAHOO.volume = 0.3;
+var WOWOW_SOUND = new Audio('wowow.mp3');
+WOWOW_SOUND.currentTime = 0.2;
+WOWOW_SOUND.volume = 1;
+var ITEM_SOUND = new Audio('item.mp3');
+var END_THEME = new Audio('endtheme.mp3');
 
 
 var ENEMY_NUMBER = 1
@@ -82,7 +82,7 @@ var keys = { left: false, right: false, up: false, down: false };
 var images = {};
 ['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png','enemy7.png','playercheer.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png', 'item.png', 'enemy7.png', 'playercheer.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
@@ -115,25 +115,25 @@ class Enemy extends Entity {
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed - (Math.random() * 5 + 1);
         this.x = this.x + Math.random() * 1 - Math.random() * 1;
-        if (Math.random()>0.997){ ///RANDOM LEFT LANE CHANGE
+        if (Math.random() > 0.997) { ///RANDOM LEFT LANE CHANGE
             this.CHANGE_RIGHT = true
         };
-        if (this.CHANGE_RIGHT === true && this.RIGHT_COUNT<=100 && this.x+ENEMY_WIDTH<GAME_WIDTH){
+        if (this.CHANGE_RIGHT === true && this.RIGHT_COUNT <= 100 && this.x + ENEMY_WIDTH < GAME_WIDTH) {
             this.x++;
             this.RIGHT_COUNT++;
         }
-        if (this.RIGHT_COUNT >98){
+        if (this.RIGHT_COUNT > 98) {
             this.CHANGE_RIGHT = false;
             this.RIGHT_COUNT = 0
         }
-        if (Math.random()>0.997){ ///RANDOM RIGHT LANE CHANGE
+        if (Math.random() > 0.997) { ///RANDOM RIGHT LANE CHANGE
             this.CHANGE_LEFT = true
         };
-        if (this.CHANGE_LEFT === true && this.LEFT_COUNT<=100 && this.x>0){
+        if (this.CHANGE_LEFT === true && this.LEFT_COUNT <= 100 && this.x > 0) {
             this.x--;
             this.LEFT_COUNT++;
         }
-        if (this.RIGHT_COUNT >98){
+        if (this.RIGHT_COUNT > 98) {
             this.CHANGE_LEFT = false;
             this.LEFT_COUNT = 0;
         }
@@ -144,7 +144,7 @@ class Item extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
-        this.y = -ITEM_HEIGHT - Math.random()*1000;
+        this.y = -ITEM_HEIGHT - Math.random() * 1000;
         this.sprite = images['item.png'];
 
         // Each enemy should have a different speed
@@ -185,7 +185,7 @@ class Road extends Entity {
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
-        ROAD_SPEED+=0.00001
+        ROAD_SPEED += 0.00001
 
     }
 }
@@ -257,9 +257,11 @@ class Player extends Entity {
         }
         if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3 && NUMBER_SHELLS > 0) {
             gameEngine.addShell();
-            if (NUMBER_SHELLS > 0){
-            NUMBER_SHELLS--;}
-            
+            if (NUMBER_SHELLS > 0) {
+                gameEngine.removeAmmo();
+                NUMBER_SHELLS--;
+            }
+
         }
 
     }
@@ -271,10 +273,10 @@ class Player extends Entity {
             this.y = this.y - timeDiff * this.speed;
         }
         if (keys.left === true && this.x > 0) {
-            this.x = this.x - timeDiff * this.speed*1.5;
+            this.x = this.x - timeDiff * this.speed * 1.5;
         }
         if (keys.right === true && this.x < GAME_WIDTH - PLAYER_WIDTH) {
-            this.x = this.x + timeDiff * this.speed*1.5;
+            this.x = this.x + timeDiff * this.speed * 1.5;
         }
     }
 }
@@ -294,6 +296,7 @@ class Engine {
         // Setup enemies, making sure there are always three
         this.setupShells();
         this.setupEnemies();
+        this.setupAmmo();
         this.setupItems();
         this.setupSampleRoad();
 
@@ -342,8 +345,8 @@ class Engine {
         if (!this.items) {
             this.items = [];
         }
-        
-        if (Math.random()<0.99) return;
+
+        if (Math.random() < 0.99) return;
 
         while (this.items.filter(e => !!e).length < MAX_ITEMS) {
             this.addItem();
@@ -355,7 +358,7 @@ class Engine {
         var itemSpot;
         var chance;
         // Keep looping until we find a free enemy spot at random
-        
+
         while (this.items[itemSpot]) {
             itemSpot = Math.floor(Math.random() * itemSpots);
         }
@@ -412,6 +415,35 @@ class Engine {
     setupShells() {
         if (!this.shells) {
             this.shells = [];
+        }
+    }
+
+    addAmmo() {
+        var ammoSpots = MAX_SHELLS;
+        var ammoSpot = 0
+
+        while (this.ammo[ammoSpot] && NUMBER_SHELLS <= 3) {
+            ammoSpot = Math.floor(Math.random() * ammoSpots);
+        }
+        this.ammo[ammoSpot] = new Ammo(GAME_WIDTH - SHELL_WIDTH * 4 + (NUMBER_SHELLS * SHELL_WIDTH), GAME_HEIGHT - SHELL_HEIGHT);
+    }
+    setupAmmo() {
+        if (!this.ammo) {
+            this.ammo = [];
+        }
+    }
+    removeAmmo() {
+        if (this.ammo[2]) {
+            delete this.ammo[2];
+            return;
+        }
+        if (this.ammo[1]) {
+            delete this.ammo[1];
+            return;
+        }
+        if (this.ammo[0]) {
+            delete this.ammo[0];
+            return;
         }
     }
 
@@ -494,6 +526,7 @@ class Engine {
         this.items.forEach(item => item.update(timeDiff));
         this.enemies.forEach(enemy => enemy.update(timeDiff));
         this.player.update(timeDiff);
+        this.ammo.forEach(ammo => ammo.update(timeDiff));
 
 
 
@@ -507,6 +540,7 @@ class Engine {
         this.items.forEach(item => item.render(this.ctx));
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.player.render(this.ctx); // draw the player
+        this.ammo.forEach(ammo => ammo.render(this.ctx));
 
         // Check if any enemies should die
         this.enemies.forEach((enemy, enemyIdx) => {
@@ -515,7 +549,7 @@ class Engine {
             }
         });
         this.roadtiles.forEach((roadtile, enemyIdx) => {
-            if (roadtile.y > GAME_HEIGHT+10) {
+            if (roadtile.y > GAME_HEIGHT + 10) {
                 delete this.roadtiles[enemyIdx];
             }
         });
@@ -530,9 +564,11 @@ class Engine {
             }
         });
 
+
         this.setupRoad();
         this.setupShells();
         this.setupItems();
+        this.setupAmmo();
         this.setupEnemies();
 
         this.isEnemyDead();
@@ -598,47 +634,50 @@ class Engine {
                     && enemy.x <= shell.x + SHELL_WIDTH
                     && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
                     && enemy.y < shell.y - SHELL_HEIGHT / 4) {
-                        delete this.shells[j]
-                        delete this.enemies[i]
-                        SHELL_NOISE.pause();
-                        MARIO_YAHOO.currentTime = 0.2;
-                        MARIO_YAHOO.play();
-                        this.player.sprite = images['playercheer.png'];
-                        setTimeout(() => this.player.sprite = images['player1.png'],600);
+                    delete this.shells[j]
+                    delete this.enemies[i]
+                    SHELL_NOISE.pause();
+                    MARIO_YAHOO.currentTime = 0.2;
+                    MARIO_YAHOO.play();
+                    this.player.sprite = images['playercheer.png'];
+                    setTimeout(() => this.player.sprite = images['player1.png'], 600);
                 }
             })
         })
     }
 
     isItemDead() {
+        this.items.forEach((item, j) => {
+            if (this.player.x + PLAYER_WIDTH >= item.x
+                && this.player.x <= item.x + ITEM_WIDTH
+                && this.player.y + PLAYER_HEIGHT - ITEM_HEIGHT / 4 > item.y
+                && this.player.y <= item.y + ITEM_HEIGHT) {
+                delete this.items[j];
+                if (NUMBER_SHELLS < 3) {
+                NUMBER_SHELLS++; 
+                this.addAmmo(); 
+                ITEM_SOUND.currentTime = 0;
+                ITEM_SOUND.play();
+                };
+            }
+        })
+
+        this.enemies.forEach((enemy, i) => {
             this.items.forEach((item, j) => {
-                if (this.player.x + PLAYER_WIDTH >= item.x
-                    && this.player.x <= item.x + ITEM_WIDTH
-                    && this.player.y + PLAYER_HEIGHT - ITEM_HEIGHT / 4 > item.y
-                    && this.player.y <= item.y + ITEM_HEIGHT) {
-                        delete this.items[j];
-                        ITEM_SOUND.currentTime = 0;
-                        ITEM_SOUND.play();
-                        if (NUMBER_SHELLS < 3){NUMBER_SHELLS++};
+                if (enemy.x + ENEMY_WIDTH >= item.x
+                    && enemy.x <= item.x + ITEM_WIDTH
+                    && enemy.y + ENEMY_HEIGHT - ITEM_HEIGHT / 2 > item.y
+                    && enemy.y < item.y - ITEM_HEIGHT / 4) {
+                    delete this.items[j]
                 }
             })
-
-            this.enemies.forEach((enemy, i) => {
-                this.items.forEach((item, j) => {
-                    if (enemy.x + ENEMY_WIDTH >= item.x
-                        && enemy.x <= item.x + ITEM_WIDTH
-                        && enemy.y + ENEMY_HEIGHT - ITEM_HEIGHT / 2 > item.y
-                        && enemy.y < item.y - ITEM_HEIGHT / 4) {
-                            delete this.items[j]
-                    }
-                })
-            })   
+        })
     }
 
     isPlayerDead() {
         return this.enemies.some(enemy => {
-            return (enemy.x + 0.85*ENEMY_WIDTH >= this.player.x &&
-                enemy.x <= this.player.x + PLAYER_WIDTH*0.85)
+            return (enemy.x + 0.85 * ENEMY_WIDTH >= this.player.x &&
+                enemy.x <= this.player.x + PLAYER_WIDTH * 0.85)
                 && ((enemy.y + ENEMY_HEIGHT - PLAYER_HEIGHT / 10 > this.player.y)
                     && (enemy.y < this.player.y + PLAYER_HEIGHT * 0.9))
         })
