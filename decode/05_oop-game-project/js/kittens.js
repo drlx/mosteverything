@@ -1,19 +1,21 @@
 // This sectin contains some game constants. It is not super interesting
 
-var MAKE_SOUNDS = () => {
     var THEME_MUSIC = new Audio('theme.mp3');
+    THEME_MUSIC.volume = 0.3;
     THEME_MUSIC.play();
     THEME_MUSIC.loop = true;
     var START_SOUND = new Audio('start.mp3');
     START_SOUND.play();
     var ENGINE_NOISE = new Audio('engine0.wav');
+    ENGINE_NOISE.volume = 0.2;
     ENGINE_NOISE.play();
     ENGINE_NOISE.loop = true;
     var SPEED_UP_SOUND = new Audio('engine8.wav');
+    var SHELL_NOISE = new Audio('redshell.mp3');
+    SHELL_NOISE.volume = 1;
+    var MARIO_YAHOO = new Audio('yahoo.mp3');
+    MARIO_YAHOO.volume = 0.4;
 
-}
-
-MAKE_SOUNDS();
 
 var ENEMY_NUMBER = 1
 var RANDOM_ENEMY = () => {
@@ -207,6 +209,7 @@ class Player extends Entity {
         if (direction === SHOOT && gameEngine.shells.filter(e => !!e).length < 3 && NUMBER_SHELLS > 0) {
             gameEngine.addShell();
             if (NUMBER_SHELLS > 0){
+                console.log('HERE',NUMBER_SHELLS);
             NUMBER_SHELLS--;}
             
         }
@@ -347,13 +350,16 @@ class Engine {
 
     addShell() {
         var shellSpots = MAX_SHELLS;
-        var shellSpot;
+        var shellSpot = 0
 
         while (this.shells[shellSpot]) {
             shellSpot = Math.floor(Math.random() * shellSpots);
         }
 
         this.shells[shellSpot] = new Shell(this.player.x + 25, this.player.y);
+        SHELL_NOISE.play();
+        console.log('SPAWNING SHELL');
+
     }
     setupShells() {
         if (!this.shells) {
@@ -544,6 +550,8 @@ class Engine {
                     && enemy.y < shell.y - SHELL_HEIGHT / 4) {
                         delete this.shells[j]
                         delete this.enemies[i]
+                        SHELL_NOISE.pause();
+                        MARIO_YAHOO.play();
                 }
             })
         })
