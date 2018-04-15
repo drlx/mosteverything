@@ -109,7 +109,7 @@ class Item extends Entity {
     constructor(xPos) {
         super();
         this.x = xPos;
-        this.y = -ITEM_HEIGHT;
+        this.y = -ITEM_HEIGHT - Math.random()*2500;
         this.sprite = images['item.png'];
 
         // Each enemy should have a different speed
@@ -287,8 +287,10 @@ class Engine {
         if (!this.items) {
             this.items = [];
         }
+        
+        if (Math.random()<0.998) return;
 
-        var chance = Math.random();
+        console.log(Math.random());
 
         while (this.items.filter(e => !!e).length < MAX_ITEMS) {
             this.addItem();
@@ -297,13 +299,13 @@ class Engine {
 
     addItem() {
         var itemSpots = GAME_WIDTH / ITEM_WIDTH;
-
         var itemSpot;
+        var chance;
         // Keep looping until we find a free enemy spot at random
+        
         while (this.items[itemSpot]) {
             itemSpot = Math.floor(Math.random() * itemSpots);
         }
-        console.log('hello')
         this.items[itemSpot] = new Item(itemSpot * ITEM_WIDTH);
     }
 
