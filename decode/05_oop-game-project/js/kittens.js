@@ -385,6 +385,7 @@ class Engine {
         }
 
         this.shells[shellSpot] = new Shell(this.player.x + 25, this.player.y);
+        SHELL_NOISE.currentTime = 1;
         SHELL_NOISE.play();
 
     }
@@ -578,6 +579,7 @@ class Engine {
                         delete this.shells[j]
                         delete this.enemies[i]
                         SHELL_NOISE.pause();
+                        MARIO_YAHOO.currentTime = 0.2;
                         MARIO_YAHOO.play();
                 }
             })
