@@ -8,16 +8,19 @@
     START_SOUND.volume = 0.4;
     START_SOUND.play();
     var ENGINE_NOISE = new Audio('engine0.wav');
-    ENGINE_NOISE.volume = 0.3;
+    ENGINE_NOISE.volume = 0.25;
     ENGINE_NOISE.play();
     ENGINE_NOISE.loop = true;
     var SPEED_UP_SOUND = new Audio('engine8.wav');
     var SHELL_NOISE = new Audio('redshell.mp3');
     SHELL_NOISE.volume = 1;
     var MARIO_YAHOO = new Audio('yahoo.mp3');
-    MARIO_YAHOO.volume = 0.35;
+    MARIO_YAHOO.volume = 0.3;
     var WOWOW_SOUND = new Audio('wowow.mp3');
+    WOWOW_SOUND.currentTime = 0.2;
     WOWOW_SOUND.volume = 1;
+    var ITEM_SOUND = new Audio('item.mp3');
+    var END_THEME = new Audio('endtheme.mp3');
 
 
 var ENEMY_NUMBER = 1
@@ -79,7 +82,7 @@ var keys = { left: false, right: false, up: false, down: false };
 var images = {};
 ['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png','enemy7.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png','item.png','enemy7.png','playercheer.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
@@ -110,7 +113,7 @@ class Enemy extends Entity {
     }
 
     update(timeDiff) {
-        this.y = this.y + timeDiff * this.speed - (Math.random() * 3 + 1);
+        this.y = this.y + timeDiff * this.speed - (Math.random() * 5 + 1);
         this.x = this.x + Math.random() * 1 - Math.random() * 1;
         if (Math.random()>0.997){ ///RANDOM LEFT LANE CHANGE
             this.CHANGE_RIGHT = true
@@ -182,6 +185,7 @@ class Road extends Entity {
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
+        ROAD_SPEED+=0.00001
 
     }
 }
@@ -199,6 +203,22 @@ class RoadSample extends Entity {
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
+    }
+}
+
+class Ammo extends Entity {
+    constructor(xPos, yPos) {
+        super();
+        this.x = xPos;
+        this.y = yPos;
+        this.sprite = images['redshell.png'];
+
+        // Each enemy should have a different speed
+        this.speed = ROAD_SPEED;
+    }
+
+    update(timeDiff) {
+        //this.y = this.y + timeDiff * this.speed;
     }
 }
 
@@ -471,8 +491,8 @@ class Engine {
         // Call update on all enemies
         this.roadtiles.forEach(roadtile => roadtile.update(timeDiff));
         this.shells.forEach(enemy => enemy.update(timeDiff));
-        this.enemies.forEach(enemy => enemy.update(timeDiff));
         this.items.forEach(item => item.update(timeDiff));
+        this.enemies.forEach(enemy => enemy.update(timeDiff));
         this.player.update(timeDiff);
 
 
@@ -484,8 +504,8 @@ class Engine {
 
         this.roadtiles.forEach(roadtile => roadtile.render(this.ctx)); // draw the road
         this.shells.forEach(enemy => enemy.render(this.ctx));
-        this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.items.forEach(item => item.render(this.ctx));
+        this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.player.render(this.ctx); // draw the player
 
         // Check if any enemies should die
@@ -512,9 +532,8 @@ class Engine {
 
         this.setupRoad();
         this.setupShells();
-        this.setupEnemies();
         this.setupItems();
-
+        this.setupEnemies();
 
         this.isEnemyDead();
         this.isItemDead();
@@ -529,6 +548,9 @@ class Engine {
             this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
             this.ctx.drawImage(images['restart.png'], 0, 350);
             WOWOW_SOUND.play();
+            THEME_MUSIC.pause();
+            END_THEME.play();
+            END_THEME.loop = true;
             var canvas = document.getElementById('canvas');
             var rect = {
                 x: 0,
@@ -581,6 +603,8 @@ class Engine {
                         SHELL_NOISE.pause();
                         MARIO_YAHOO.currentTime = 0.2;
                         MARIO_YAHOO.play();
+                        this.player.sprite = images['playercheer.png'];
+                        setTimeout(() => this.player.sprite = images['player1.png'],600);
                 }
             })
         })
@@ -593,15 +617,28 @@ class Engine {
                     && this.player.y + PLAYER_HEIGHT - ITEM_HEIGHT / 4 > item.y
                     && this.player.y <= item.y + ITEM_HEIGHT) {
                         delete this.items[j];
+                        ITEM_SOUND.currentTime = 0;
+                        ITEM_SOUND.play();
                         if (NUMBER_SHELLS < 3){NUMBER_SHELLS++};
                 }
             })
+
+            this.enemies.forEach((enemy, i) => {
+                this.items.forEach((item, j) => {
+                    if (enemy.x + ENEMY_WIDTH >= item.x
+                        && enemy.x <= item.x + ITEM_WIDTH
+                        && enemy.y + ENEMY_HEIGHT - ITEM_HEIGHT / 2 > item.y
+                        && enemy.y < item.y - ITEM_HEIGHT / 4) {
+                            delete this.items[j]
+                    }
+                })
+            })   
     }
 
     isPlayerDead() {
         return this.enemies.some(enemy => {
-            return (enemy.x + ENEMY_WIDTH >= this.player.x &&
-                enemy.x <= this.player.x + PLAYER_WIDTH)
+            return (enemy.x + 0.85*ENEMY_WIDTH >= this.player.x &&
+                enemy.x <= this.player.x + PLAYER_WIDTH*0.85)
                 && ((enemy.y + ENEMY_HEIGHT - PLAYER_HEIGHT / 10 > this.player.y)
                     && (enemy.y < this.player.y + PLAYER_HEIGHT * 0.9))
         })
