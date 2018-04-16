@@ -30,7 +30,7 @@ var RANDOM_ENEMY = () => {
 
 
 var GAME_WIDTH = 500;
-var GAME_HEIGHT = 750;
+var GAME_HEIGHT = document.documentElement.clientHeight;
 
 var ENEMY_WIDTH = 100;
 var ENEMY_HEIGHT = 100;
@@ -74,15 +74,16 @@ var keys = { left: false, right: false, up: false, down: false };
 
 // Preload game images
 var images = {};
-['roadtile.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
+['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png', 'item.png', 'enemy7.png', 'playercheer.png', 'start.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png',
+    'item.png', 'enemy7.png', 'playercheer.png', 'start.png', 'enemy145.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
     });
 
-images['roadtile.png'].id = 'road';
+images['rainbowroad.png'].id = 'road';
 
 class Entity {
     render(ctx) {
@@ -171,8 +172,7 @@ class Road extends Entity {
         super();
         this.x = xPos;
         this.y = -ROAD_HEIGHT;
-        this.sprite = images['roadtile.png'];
-       // this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
+        this.sprite = images['rainbowroad.png'];
 
         // Each enemy should have a different speed
         this.speed = ROAD_SPEED;
@@ -181,7 +181,6 @@ class Road extends Entity {
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
         ROAD_SPEED += 0.00005
-       // this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
 
     }
 }
@@ -191,7 +190,7 @@ class RoadSample extends Entity {
         super();
         this.x = xPos;
         this.y = yPos;
-        this.sprite = images['roadtile.png'];
+        this.sprite = images['rainbowroad.png'];
 
         // Each enemy should have a different speed
         this.speed = ROAD_SPEED;
@@ -583,7 +582,7 @@ class Engine {
             // If they are dead, then it's game over!
             this.ctx.font = 'bold 30px Impact';
             this.ctx.fillStyle = '#ffffff';
-            this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
+            this.ctx.fillText(this.score, 5, 30);
             this.ctx.drawImage(images['restart.png'], 0, 350);
             WOWOW_SOUND.play();
             THEME_MUSIC.pause();
@@ -636,12 +635,12 @@ class Engine {
                     && enemy.x <= shell.x + SHELL_WIDTH
                     && enemy.y + ENEMY_HEIGHT - SHELL_HEIGHT / 2 > shell.y
                     && enemy.y < shell.y - SHELL_HEIGHT / 4) {
-                    delete this.shells[j]
-                    delete this.enemies[i]
                     SHELL_NOISE.pause();
                     MARIO_YAHOO.currentTime = 0.2;
                     MARIO_YAHOO.play();
                     this.player.sprite = images['playercheer.png'];
+                    delete this.shells[j]
+                    delete this.enemies[i]
                     setTimeout(() => this.player.sprite = images['player1.png'], 600);
                 }
             })
@@ -711,4 +710,3 @@ var startGame = () => {
 }
 
 document.getElementById('startbutton').addEventListener('click', startGame)
-
