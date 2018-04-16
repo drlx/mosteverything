@@ -1,16 +1,8 @@
 // This sectin contains some game constants. It is not super interesting
 
 var THEME_MUSIC = new Audio('theme.mp3');
-THEME_MUSIC.volume = 0.3;
-THEME_MUSIC.play();
-THEME_MUSIC.loop = true;
 var START_SOUND = new Audio('start.mp3');
-START_SOUND.volume = 0.4;
-START_SOUND.play();
 var ENGINE_NOISE = new Audio('engine0.wav');
-ENGINE_NOISE.volume = 0.25;
-ENGINE_NOISE.play();
-ENGINE_NOISE.loop = true;
 var SPEED_UP_SOUND = new Audio('engine8.wav');
 var SHELL_NOISE = new Audio('redshell.mp3');
 SHELL_NOISE.volume = 1;
@@ -21,7 +13,9 @@ WOWOW_SOUND.currentTime = 0.2;
 WOWOW_SOUND.volume = 1;
 var ITEM_SOUND = new Audio('item.mp3');
 var END_THEME = new Audio('endtheme.mp3');
-
+var MENU_MUSIC = new Audio('menu.mp3');
+MENU_MUSIC.play();
+MENU_MUSIC.loop = true;
 
 var ENEMY_NUMBER = 1
 var RANDOM_ENEMY = () => {
@@ -82,7 +76,7 @@ var keys = { left: false, right: false, up: false, down: false };
 var images = {};
 ['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
-    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png', 'item.png', 'enemy7.png', 'playercheer.png'].forEach(imgName => {
+    'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png', 'item.png', 'enemy7.png', 'playercheer.png', 'start.png'].forEach(imgName => {
         var img = document.createElement('img');
         img.src = 'images/' + imgName;
         images[imgName] = img;
@@ -310,6 +304,7 @@ class Engine {
 
         this.ctx = canvas.getContext('2d');
 
+
         // Since gameLoop will be called out of context, bind it once here.
         this.gameLoop = this.gameLoop.bind(this);
     }
@@ -318,6 +313,11 @@ class Engine {
     The game allows for 5 horizontal slots where an enemy can be present.
     At any point in time there can be at most MAX_ENEMIES enemies otherwise the game would be impossible
     */
+
+    startButton() {
+        this.ctx.drawImage(images['start.png'], 0, 350);
+    }
+
     setupEnemies() {
         if (!this.enemies) {
             this.enemies = [];
@@ -654,10 +654,10 @@ class Engine {
                 && this.player.y <= item.y + ITEM_HEIGHT) {
                 delete this.items[j];
                 if (NUMBER_SHELLS < 3) {
-                NUMBER_SHELLS++; 
-                this.addAmmo(); 
-                ITEM_SOUND.currentTime = 0;
-                ITEM_SOUND.play();
+                    NUMBER_SHELLS++;
+                    this.addAmmo();
+                    ITEM_SOUND.currentTime = 0;
+                    ITEM_SOUND.play();
                 };
             }
         })
@@ -690,4 +690,23 @@ class Engine {
 
 // This section will start the game
 var gameEngine = new Engine(document.getElementById('app'));
-gameEngine.start();
+
+var startGame = () => {
+    gameEngine.start();
+    MENU_MUSIC.pause();
+    //document.getElementById('videobg').style.display = 'none';
+    document.documentElement.style.background = 'url("images/backgroundstars.jpg")'
+    document.getElementById('startbutton').style.display = 'none';
+    document.getElementById('canvas').style.display = 'block';
+    THEME_MUSIC.volume = 0.3;
+    THEME_MUSIC.play();
+    THEME_MUSIC.loop = true;
+    START_SOUND.volume = 0.4;
+    START_SOUND.play();
+    ENGINE_NOISE.volume = 0.25;
+    ENGINE_NOISE.play();
+    ENGINE_NOISE.loop = true;
+}
+
+document.getElementById('startbutton').addEventListener('click', startGame)
+

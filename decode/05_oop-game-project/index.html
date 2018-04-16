@@ -8,11 +8,18 @@
 </head>
 <style>
     html {
-        background: url("images/backgroundstars.jpg") no-repeat center center fixed;
+        background: url("images/giphy.gif") no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
         background-size: cover;
+    }
+
+    #wallpaper1{
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover; 
     }
 
     canvas {
@@ -20,7 +27,7 @@
         padding-right: 0;
         margin-left: auto;
         margin-right: auto;
-        display: block;
+        display: none;
 
 
     }
@@ -29,13 +36,72 @@
         z-index: -1;
     }
 
+    #startbutton{
+    background:url(image/logo.png) no-repeat;
+    border: 0; 
+    background: transparent;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%;
+    max-height: 100%;
+    padding-top: 10%;
+}
+
+.zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+#fullscreen-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+}
+
+.fullscreen-bg__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .fullscreen-bg__video {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .fullscreen-bg__video {
+    width: auto;
+    height: 100%;
+  }
+}
+
 </style>
 
 <body>
-
+   <button id='startbutton' class='zoom'><img src = "images/logo.png" id="start"></button> 
 
     <div id="app"></div>
     <script src="js/kittens.js"></script>
+
+    <!-- <div id="fullscreen-bg" class="fullscreen-bg">
+            <video id='videobg' loop muted autoplay class="fullscreen-bg__video">
+                <source src="videowall.mp4" type="video/mp4">
+            </video>
+        </div> -->
 </body>
 
 </html>
