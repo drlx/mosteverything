@@ -74,7 +74,7 @@ var keys = { left: false, right: false, up: false, down: false };
 
 // Preload game images
 var images = {};
-['rainbowroad.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
+['roadtile.png', 'enemy1.png', 'enemy2.png', 'enemy3.png',
     'enemy4.png', 'enemy5.png', 'player1.png', 'enemy6.png', 'restart.png',
     'playerleft1.png', 'playerright1.png', 'rainbowstart.png', 'redshell.png', 'item.png', 'enemy7.png', 'playercheer.png', 'start.png'].forEach(imgName => {
         var img = document.createElement('img');
@@ -82,11 +82,11 @@ var images = {};
         images[imgName] = img;
     });
 
-images['rainbowroad.png'].id = 'road';
+images['roadtile.png'].id = 'road';
 
 class Entity {
     render(ctx) {
-        ctx.drawImage(this.sprite, this.x, this.y);
+        ctx.drawImage(this.sprite, this.x, this.y, this.x*this.scale, this.y*this.scale);
     }
 }
 
@@ -171,7 +171,8 @@ class Road extends Entity {
         super();
         this.x = xPos;
         this.y = -ROAD_HEIGHT;
-        this.sprite = images['rainbowroad.png'];
+        this.sprite = images['roadtile.png'];
+        this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
 
         // Each enemy should have a different speed
         this.speed = ROAD_SPEED;
@@ -189,7 +190,7 @@ class RoadSample extends Entity {
         super();
         this.x = xPos;
         this.y = yPos;
-        this.sprite = images['rainbowroad.png'];
+        this.sprite = images['roadtile.png'];
 
         // Each enemy should have a different speed
         this.speed = ROAD_SPEED;
