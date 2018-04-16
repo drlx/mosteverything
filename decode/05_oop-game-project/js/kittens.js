@@ -86,7 +86,7 @@ images['roadtile.png'].id = 'road';
 
 class Entity {
     render(ctx) {
-        ctx.drawImage(this.sprite, this.x, this.y, this.x*this.scale, this.y*this.scale);
+        ctx.drawImage(this.sprite, this.x, this.y);
     }
 }
 
@@ -172,7 +172,7 @@ class Road extends Entity {
         this.x = xPos;
         this.y = -ROAD_HEIGHT;
         this.sprite = images['roadtile.png'];
-        this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
+       // this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
 
         // Each enemy should have a different speed
         this.speed = ROAD_SPEED;
@@ -181,6 +181,7 @@ class Road extends Entity {
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
         ROAD_SPEED += 0.00005
+       // this.scale = (this.y+ROAD_HEIGHT/GAME_HEIGHT);
 
     }
 }
