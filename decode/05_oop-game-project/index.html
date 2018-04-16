@@ -28,8 +28,6 @@
         margin-left: auto;
         margin-right: auto;
         display: none;
-
-
     }
 
     #road {
@@ -57,7 +55,9 @@
     transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }
 
-#fullscreen-bg {
+
+
+.fullscreen-bg {
     position: fixed;
     top: 0;
     right: 0;
@@ -65,6 +65,7 @@
     left: 0;
     overflow: hidden;
     z-index: -100;
+    display: none;
 }
 
 .fullscreen-bg__video {
@@ -97,11 +98,11 @@
     <div id="app"></div>
     <script src="js/kittens.js"></script>
 
-    <!-- <div id="fullscreen-bg" class="fullscreen-bg">
+    <div id="fullscreen-bg" class="fullscreen-bg">
             <video id='videobg' loop muted autoplay class="fullscreen-bg__video">
-                <source src="videowall.mp4" type="video/mp4">
+                <source src="videowall.webm" type="video/webm">
             </video>
-        </div> -->
+        </div>
 </body>
 
 </html>

@@ -47,7 +47,7 @@ var MAX_ITEMS = 2;
 var ROAD_HEIGHT = 250;
 var ROAD_WIDTH = 500;
 var MAX_ROAD = 5;
-var ROAD_SPEED = 0.4;
+var ROAD_SPEED = 0.5;
 
 var SHELL_HEIGHT = 50;
 var SHELL_WIDTH = 50;
@@ -179,7 +179,7 @@ class Road extends Entity {
 
     update(timeDiff) {
         this.y = this.y + timeDiff * this.speed;
-        ROAD_SPEED += 0.00001
+        ROAD_SPEED += 0.00005
 
     }
 }
@@ -694,8 +694,8 @@ var gameEngine = new Engine(document.getElementById('app'));
 var startGame = () => {
     gameEngine.start();
     MENU_MUSIC.pause();
-    //document.getElementById('videobg').style.display = 'none';
-    document.documentElement.style.background = 'url("images/backgroundstars.jpg")'
+    document.getElementById('fullscreen-bg').style.display = 'block';
+    //document.documentElement.style.background = 'url("images/spacebg.gif")';
     document.getElementById('startbutton').style.display = 'none';
     document.getElementById('canvas').style.display = 'block';
     THEME_MUSIC.volume = 0.3;
