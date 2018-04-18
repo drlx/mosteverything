@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Problem 5</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id='root'></div>
+    <script>
+        class Quote extends React.Component {
+            constructor() {
+                super()
+                    this.state = {
+                        quotes: ["HE WHO DETECTED IT PROJECTED IT - Voltaire","HE WHO DENIED IT SUPPLIED IT - John F. Kennedy",
+                        "HE WHO SMELT IT DEALT IT - Mahatma Ghandi","HE WHO SAID THE RHYME DID THE CRIME - Fredrich Nietzche",
+                        "HE WHO REFUTED IT TOOTED IT - Rene Descartes"],
+                        current: Math.floor(Math.random()*5)
+                    };
+                }
+                render(){
+                    return React.createElement('div', null, '', 
+                    React.createElement('button', {onClick: () => this.setState({current: Math.floor(Math.random()*5)})},"RANDOM QUOTE"),
+                    React.createElement('h1',null,this.state.quotes[this.state.current]));
+                }
+            }
+
+            var root = document.getElementById('root');
+            ReactDOM.render(React.createElement(Quote,null),root)
+    </script>
+    </div>
+</body>
+
+</html>

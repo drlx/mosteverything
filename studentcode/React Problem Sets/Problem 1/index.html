@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        var rootdiv = document.getElementById('root');
+        var elem = React.createElement('div', null, React.createElement('div', null, React.createElement('a', { href: 'http://google.com' }, React.createElement('img', { src: 'giphy.gif' }))));
+        ReactDOM.render(elem, rootdiv);
+    </script>
+</body>
+
+</html>
