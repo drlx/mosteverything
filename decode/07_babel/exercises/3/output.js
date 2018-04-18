@@ -4,7 +4,7 @@ var elem = React.createElement(
     null,
     React.createElement(
         "a",
-        { href: "www.google.com2" },
+        { href: "www.google.com" },
         "Google.com"
     ),
     React.createElement(
