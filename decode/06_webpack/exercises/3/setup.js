@@ -1,3 +1,5 @@
+import p5 from 'p5';
+
 
 function setup(p5) {
     p5.setup = () => {

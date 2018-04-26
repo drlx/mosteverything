@@ -10,7 +10,7 @@ var elem = React.createElement(
   React.createElement(
     'li',
     null,
-    'bacon2'
+    'bacon'
   ),
   React.createElement(
     'li',

@@ -1,3 +1,4 @@
+import p5 from 'p5'
 
 function renderWave(p5, yvalues, xspacing) {
     p5.noStroke();
@@ -8,3 +9,5 @@ function renderWave(p5, yvalues, xspacing) {
     }
 
 }
+
+export default renderWave
