@@ -2,8 +2,10 @@ For each of the HTTP requests, answer the question provided
 
 A. What is the path of this HTTP request?
 ```
-GET /testdir HTTP/1.1
+GET /testdir HTTP/1.1 
 Host: 127.0.0.1
+
+/testdir
 
 ```
 
@@ -12,6 +14,8 @@ B. What is the method of this HTTP request?
 DELETE /testdir HTTP/1.1
 Host: 127.0.0.1
 
+
+DELETE
 ```
 
 C. How many headers does this request have?
@@ -22,6 +26,9 @@ Accept: image/gif, image/jpeg, */*
 Accept-Language: en-us
 Accept-Encoding: gzip, deflate
 User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+
+
+5
 
 ```
 
@@ -34,4 +41,6 @@ Accept-Language: en-us
 Accept-Encoding: gzip, deflate
 User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
 
+
+www.nowhere123.com
 ```

@@ -1,6 +1,15 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
+const fs = require('fs');
+
+let image = fs.readFileSync('./github.png')
+
+//fs.writeFileSync('./foo.txt', "testing 123")
+
+//console.log(fs.readFileSync('./foo.txt').toString())
+
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -10,6 +19,9 @@ let body = `
   <input type="text" name="username"><br>
   password:<br>
   <input type="text" name="password">
+  <input type="submit">
+
+  <form action="/download" method="POST">
   <input type="submit">
 </form>
 `
@@ -27,6 +39,11 @@ app.post('/', (req,res) => {
         return console.log("FAILED")
     }
 }) 
+
+app.post('/download', (req,res) => {
+    console.log("POSTING")
+res.send(image)
+})
 
 app.listen(3006, () => {
     console.log('listening on 3006')

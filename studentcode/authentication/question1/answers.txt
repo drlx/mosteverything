@@ -1,0 +1,8 @@
+You are the administrator of a website.
+
+The hashes of the passwords of your user were stolen. Some of your users have super easy passwords like "password123" and "123456"
+
+Which of the following is true:
+Your users are safe because hashes are one way functions
+-->> Some of your users are safe and some are not
+All your users could be hacked because the hackers have all the hashes

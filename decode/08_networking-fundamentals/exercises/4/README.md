@@ -2,7 +2,7 @@ For each of the following HTTP responses, ascertain whether or not they are prop
 
 A.
 ```
-HTTP/1.1 200
+HTTP/1.1 200     
 Date: Sun, 18 Oct 2009 08:56:53 GMT
 Server: Apache/2.2.14 (Win32)
 Last-Modified: Sat, 20 Nov 2004 07:16:26 GMT
@@ -14,6 +14,8 @@ Content-Type: text/html
 X-Pad: avoid browser bug
   
 <html><body><h1>It works!</h1></body></html>
+
+MISSING STATUS CODE DESCRIPTION
 ```
 B.
 ```
@@ -33,6 +35,8 @@ Content-Type: text/html; charset=iso-8859-1
 </body></html>
 ```
 
+NO PROTOCOL
+
 C.
 ```
 HTTP/1.1 501 Method Not Implemented
@@ -51,4 +55,6 @@ Content-Type: text/html; charset=iso-8859-1
 <p>get to /index.html not supported.<br />
 </p>
 </body></html>
+
+THIS IS OK
 ```

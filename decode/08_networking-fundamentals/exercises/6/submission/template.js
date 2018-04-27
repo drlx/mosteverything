@@ -13,22 +13,25 @@ function makeRequest(addr, req, f) {
     });
 }
 
-
 //The following string *MUST* end with 2 newlines
-var http_request =
-    `GET /index.html HTTP/1.1
-host: www.dolekemp96.com
+function generateHTTPRequest(host, path) {
+    return `GET ${path} HTTP/1.1
+host: ${host}
 Connection: close
 
 `;
+}
 
 // IGNORE EVERYTHING BEFORE THIS LINE
 
 function process(httpResponse) {
-  //console.log(httpResponse.indexOf("Content-Length:")+15)
-
-  //console.log(httpResponse.length)
-console.log(httpResponse.substring(httpResponse.indexOf("Content-Length:")+16,httpResponse.indexOf("Content-Length:")+20))
+    console.log(httpResponse)
+    if (httpResponse.indexOf('manipulated') != -1) {
+        console.log("the word is on the page");
+    } else {
+        console.log("the word is not the page");
+    }
 }
+var httpRequest = generateHTTPRequest('www.dolekemp96.org', '/');
 
-makeRequest("www.dolekemp96.org", http_request, process);
+makeRequest("www.dolekemp96.org", httpRequest, process)

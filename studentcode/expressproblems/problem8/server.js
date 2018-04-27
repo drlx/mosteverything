@@ -22,6 +22,8 @@ app.get('/', (req,res) => {
 
 app.post('/submitForm', (req,res) => {
   if (req.body.username.toString().length > 0
+      &&req.body.password.toString() > 0
+      && req.body.repeatPassword.toString() > 0
       && req.body.password.toString() ===
       req.body.repeatPassword){
           console.log("SUCCESS")
